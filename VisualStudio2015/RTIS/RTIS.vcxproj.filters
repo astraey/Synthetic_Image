@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de código fuente">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{44c510f6-f645-482e-9274-13bccc809561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cameras">
+      <UniqueIdentifier>{4b5cecc8-bd0d-4c3a-85e9-9f798e6088cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core">
+      <UniqueIdentifier>{8f97f086-32c7-49b1-a77b-2c32751d0df6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\shapes">
+      <UniqueIdentifier>{4e7efcbd-c4de-4128-a336-1d41786e41c4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cameras\camera.cpp">
+      <Filter>src\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cameras\ortographic.cpp">
+      <Filter>src\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cameras\perspective.cpp">
+      <Filter>src\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\shapes\shape.cpp">
+      <Filter>src\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\shapes\sphere.cpp">
+      <Filter>src\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\bitmap.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\eqsolver.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\film.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\matrix4x4.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\ray.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\tester.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\utils.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\core\vector3d.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\cameras\camera.h">
+      <Filter>src\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cameras\ortographic.h">
+      <Filter>src\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cameras\perspective.h">
+      <Filter>src\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\shapes\shape.h">
+      <Filter>src\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\shapes\sphere.h">
+      <Filter>src\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\bitmap.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\eqsolver.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\film.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\matrix4x4.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\ray.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\tester.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\utils.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\core\vector3d.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
