@@ -37,24 +37,26 @@ void transformationsExercise()
     // Scale Matrix
 	double sx, sy, sz;
 	sx = 2; sy = 1; sz = -1;
-	Vector3D sc(sx,sy,sz);
+	Vector3D sc(sx, sy, sz);
 	Matrix4x4 scaleMatrix = Matrix4x4::scale(sc);
     std::cout << "The content of matrix scaleMatrix is: \n" << std::endl;
     std::cout << scaleMatrix << separator << std::endl;
 
     // Rotate around X Matrix
-    double angleInDegrees = 180;
+    double angleInDegrees = 60;
     double thetaInRadians = Utils::degreesToRadians(angleInDegrees);
-	//static Matrix4x4 rotate(const double angleInRad, const Vector3D &axis);
 	Vector3D rt(1, 0, 0);
-	Matrix4x4 rotateXMatrix = Matrix4x4::rotate(thetaInRadians,rt);
+	Matrix4x4 rotateXMatrix = Matrix4x4::rotate(thetaInRadians, rt);
     std::cout << "The content of matrix rotateXMatrix is: \n" << std::endl;
     std::cout << rotateXMatrix << separator << std::endl;
 
     // Rotate around an arbitrary axis Matrix
-    //(...)
-    //std::cout << "The content of matrix rotateArtitraryAxisMatrix is: \n" << std::endl;
-    //std::cout << rotateArtitraryAxisMatrix << separator << std::endl;
+	double angleInDegrees2 = 30;
+	double thetaInRadians2 = Utils::degreesToRadians(angleInDegrees2);
+	Vector3D rt2(1, 1, 1);
+	Matrix4x4 rotateArtitraryAxisMatrix = Matrix4x4::rotate(thetaInRadians2, rt2);
+    std::cout << "The content of matrix rotateArtitraryAxisMatrix is: \n" << std::endl;
+    std::cout << rotateArtitraryAxisMatrix << separator << std::endl;
 
     // Transposed and Inversion
     std::cout << separatorStar << "Inverting and Transposing a Matrix" << separatorStar << std::endl;
@@ -62,12 +64,13 @@ void transformationsExercise()
     translationMat.transpose(translationMatTransposed);
     std::cout << "The transpose of matrix \n\n" << translationMat << "\n is \n\n"
               << translationMatTransposed << separator << std::endl;
+    
+	Matrix4x4 inverseTranslationMat;
+	translationMat.inverse(inverseTranslationMat);
+    std::cout << "The inverse of matrix \n\n" << translationMat << "\n is \n\n" << inverseTranslationMat << std::endl;
 
-    Matrix4x4 inverseTranslationMat;
-    //(...)
-    //std::cout << "The inverse of matrix \n\n" << translationMat << "\n is \n\n" << inverseTranslationMat << std::endl;
-    //std::cout << "And their multiplication should thus give the identity matrix:\n\n";
-    // (...)
+	Matrix4x4 MultiplicatedMatrix = translationMat.operator*(inverseTranslationMat);
+	std::cout << "And their multiplication should thus give the identity matrix:\n\n" << MultiplicatedMatrix << std::endl;
 
     // Combine here some transforms, and visualize the result
     std::cout << separatorStar << "Combine transforms and visualize the result" << separatorStar << std::endl;
