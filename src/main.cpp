@@ -35,9 +35,13 @@ void transformationsExercise()
     std::cout << translationMat << separator << std::endl;
 
     // Scale Matrix
-    //(...)
-    //std::cout << "The content of matrix scaleMatrix is: \n" << std::endl;
-    //std::cout << scaleMatrix << separator << std::endl;
+	double sx, sy, sz;
+	sx = 2; sy = 1; sz = -1;
+	Vector3D sc(sx,sy,sz);
+	Matrix4x4 scaleMatrix = Matrix4x4::scale(sc);
+	//static Matrix4x4 scale(const Vector3D &scalingVector);
+    std::cout << "The content of matrix scaleMatrix is: \n" << std::endl;
+    std::cout << scaleMatrix << separator << std::endl;
 
     // Rotate around X Matrix
     double angleInDegrees = 60;
