@@ -39,16 +39,17 @@ void transformationsExercise()
 	sx = 2; sy = 1; sz = -1;
 	Vector3D sc(sx,sy,sz);
 	Matrix4x4 scaleMatrix = Matrix4x4::scale(sc);
-	//static Matrix4x4 scale(const Vector3D &scalingVector);
     std::cout << "The content of matrix scaleMatrix is: \n" << std::endl;
     std::cout << scaleMatrix << separator << std::endl;
 
     // Rotate around X Matrix
-    double angleInDegrees = 60;
+    double angleInDegrees = 180;
     double thetaInRadians = Utils::degreesToRadians(angleInDegrees);
-    //(...)
-    //std::cout << "The content of matrix rotateXMatrix is: \n" << std::endl;
-    //std::cout << rotateXMatrix << separator << std::endl;
+	//static Matrix4x4 rotate(const double angleInRad, const Vector3D &axis);
+	Vector3D rt(1, 0, 0);
+	Matrix4x4 rotateXMatrix = Matrix4x4::rotate(thetaInRadians,rt);
+    std::cout << "The content of matrix rotateXMatrix is: \n" << std::endl;
+    std::cout << rotateXMatrix << separator << std::endl;
 
     // Rotate around an arbitrary axis Matrix
     //(...)
