@@ -75,13 +75,13 @@ void transformationsExercise()
     // Combine here some transforms, and visualize the result
     std::cout << separatorStar << "Combine transforms and visualize the result" << separatorStar << std::endl;
 
-    //Matrix4x4 scaleTranslate = (...);
-    //std::cout << "The content of matrix scaleTranslate is: \n" << std::endl;
-    //std::cout << scaleTranslate << separator << std::endl;
+    Matrix4x4 scaleTranslate = scaleMatrix.operator*(translationMat);
+    std::cout << "The content of matrix scaleTranslate is: \n" << std::endl;
+    std::cout << scaleTranslate << separator << std::endl;
 
-    //Matrix4x4 translateScale = (...);
-    //std::cout << "The content of matrix translateScale is: \n" << std::endl;
-    //std::cout << translateScale << separator << std::endl;
+	Matrix4x4 translateScale = translationMat.operator*(scaleMatrix);
+    std::cout << "The content of matrix translateScale is: \n" << std::endl;
+    std::cout << translateScale << separator << std::endl;
 }
 
 void normalTransformExercise()
@@ -103,10 +103,31 @@ void normalTransformExercise()
     std::cout << "Scale Matrix: \n" << std::endl;
     std::cout << S << std::endl;
 
+	//We transfomr the vector v with the matrix S
     Vector3D vTransformed = S.transformVector(v);
     std::cout << "Vector v\' = " << vTransformed << "\n" << std::endl;
 
-    // (...)
+	//In this case, the transposed matrix is equal to the original
+	Matrix4x4 STransposed;
+	S.transpose(STransposed);
+	std::cout << "STransposed \n" << STransposed << "\n" << std::endl;
+
+	//We calculate the inverse of the previously Transposed Scale Matrix
+	Matrix4x4 STransposedInverse;
+	STransposed.inverse(STransposedInverse);
+	std::cout << "STransposedInverse \n" << STransposedInverse << "\n" << std::endl;
+
+	//We use the Transposed Inverted Matrix to transform the vector
+	Vector3D nTransformed = STransposedInverse.transformVector(n);
+	std::cout << "Vector n\' = " << nTransformed << "\n" << std::endl;
+
+	//We calculate the dot product between the two vectors. If the result is 0, it means that 
+	//the angle between the two vectors is indeed 90º (cos90 = 0), so we can confirm that the 
+	//two vectors are perpendicular after scaling them 
+	float result = dot(nTransformed, vTransformed);
+
+	std::cout << "Result: " << result << "\n" << std::endl;
+
 }
 
 void paintingAnImageExercise()
@@ -117,54 +138,107 @@ void paintingAnImageExercise()
     resY = 512;
     Film film(resX, resY);
 
+	//We assign a color to every pixel based on its cordinates. The values for red 
+	//and green never surpass 1. 
     for(unsigned int col = 0; col < resX; col++)
         {
             for(unsigned int row = 0; row < resY; row++)
             {
-                Vector3D color(255, 0, 0);
+				float rCol = (col + 0.5) / resX;
+				float gCol = (row + 0.5) / resY;
+                Vector3D color(rCol, gCol, 0);
                 film.setPixelValue(col, row, color);
             }
         }
 
     // Save the final result to file
     film.save();
+	std::cout << "Image was successfully saved" << std::endl;
 }
 
 void filteringAnImageExercise()
 {
-    // Create two instances of the film class with the same resolution
-    int resX, resY;
-    resX = 512;
-    resY = 512;
-    Film f1(resX, resY);
-    Film f2(resX, resY);
+	// Create two instances of the film class with the same resolution
+	int resX, resY;
+	resX = 512;
+	resY = 512;
+	Film f1(resX, resY);
+	Film f2(resX, resY);
 
-    // Create the original image
-    //  Draw a circle centered at centerX, centerY (in pixels, image space)
-    //   and with ray r (also in pixels)
-    int centerX = resX / 2;
-    int centerY = resY / 2;
-    int r = std::min(centerX, centerY)/2;
-    for(int lin=0; lin<resX; lin++)
-    {
-        for(int col=0; col<resY; col++)
-        {
-            // Use the equation of the sphere to determine the pixel color
-            if( (lin-centerX)*(lin-centerX) + (col-centerY)*(col-centerY) < r*r )
-                f1.setPixelValue(col, lin, Vector3D(1, 1, 0));
-        }
-    }
+	// Create the original image
+	//  Draw a circle centered at centerX, centerY (in pixels, image space)
+	//   and with ray r (also in pixels)
+	int centerX = resX / 2;
+	int centerY = resY / 2;
+	int r = std::min(centerX, centerY) / 2;
+	for (int lin = 0; lin < resX; lin++)
+	{
+		for (int col = 0; col < resY; col++)
+		{
+			// Use the equation of the sphere to determine the pixel color
+			if ((lin - centerX)*(lin - centerX) + (col - centerY)*(col - centerY) < r*r) {
+				f1.setPixelValue(col, lin, Vector3D(1, 1, 0));
+			}
+		}
+	}
 
-    // Filter-related variables
-    // Declare here your filter-related variables
-    // (e.g., FILTER SIZE)
-    //(...)
 
-    // Implement here your image filtering algorithm
-    //(...)
 
-    // DO NOT FORGET TO SAVE YOUR IMAGE!
-    //(...)
+	int filterBorderWidth = 9;
+	int filterXSize = 20;
+	int filterYSize = 20;
+	int totalNeighbours = filterXSize * filterYSize;
+	int iterations = 5;
+
+	for(int h = 0; h < iterations; h++)
+	{
+		for (int lin = 0; lin < resX; lin++)
+		{
+			for (int col = 0; col < resY; col++)
+			{
+				//We read the values of the neighbours of a pixel and fix its value depending on them. 
+				Vector3D colorValue = Vector3D(0, 0, 0);
+				unsigned targetX = lin - filterBorderWidth;
+				unsigned targetY = col - filterBorderWidth;
+
+				for (int i = 0; i < filterXSize; i++)
+				{
+					for (int j = 0; j < filterXSize; j++)
+					{
+						if (col + i < resX && lin + j < resY)
+						{
+							colorValue.operator+=(f1.getPixelValue(col + i, lin + j));
+						}
+					}
+				}
+
+				colorValue.operator/=(totalNeighbours);
+				f2.setPixelValue(col, lin, colorValue);
+
+			}
+		}
+
+		f1.clearData();
+
+		//Copies the content of f2 in f1 to repeat the process in the next iteration;
+		for (int lin = 0; lin < resX; lin++)
+		{
+			for (int col = 0; col < resY; col++)
+			{
+
+				f1.setPixelValue(col, lin, f2.getPixelValue(col,lin));
+				
+			}
+		}
+
+
+}
+
+	//We save the final result
+	f2.save();
+	std::cout << "Filter was successfully applied to the image, which have been saved" << std::endl;
+
+	
 }
 
 void completeSphereClassExercise()
@@ -230,15 +304,15 @@ int main()
 
     // ASSIGNMENT 1
     transformationsExercise();
-    //normalTransformExercise();
-    //paintingAnImageExercise();
-    //filteringAnImageExercise();
+    normalTransformExercise();
+    paintingAnImageExercise();
+    filteringAnImageExercise();
 
     // ASSIGNMENT 2
     //eqSolverExercise();
     //completeSphereClassExercise();
     //raytrace();
-
     std::cout << "\n\n" << std::endl;
+
     return 0;
 }
