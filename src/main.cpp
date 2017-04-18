@@ -184,11 +184,11 @@ void filteringAnImageExercise()
 
 
 
-	int filterBorderWidth = 3;
-	int filterXSize = 20;
-	int filterYSize = 20;
+	int filterBorderWidth = 9;
+	int filterXSize = 3;
+	int filterYSize = 3;
 	int totalNeighbours = filterXSize * filterYSize;
-	int iterations = 3;
+	int iterations = 100;
 
 	for(int h = 0; h < iterations; h++)
 	{
@@ -201,11 +201,13 @@ void filteringAnImageExercise()
 				unsigned targetX = lin - filterBorderWidth;
 				unsigned targetY = col - filterBorderWidth;
 
-				for (int i = 0; i < filterXSize; i++)
+
+
+				for (int i = floor(-filterXSize/2); i < floor(filterXSize/2)+1; i++)
 				{
-					for (int j = 0; j < filterXSize; j++)
+					for (int j = floor(-filterYSize/2); j < floor(filterYSize/2)+1; j++)
 					{
-						if (col + i < resX && lin + j < resY)
+						if (col + i < resX && lin + j < resY && col + i > 0 && lin + j > 0)
 						{
 							colorValue.operator+=(f1.getPixelValue(col + i, lin + j));
 						}
