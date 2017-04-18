@@ -184,11 +184,11 @@ void filteringAnImageExercise()
 
 
 
-	int filterBorderWidth = 9;
+	int filterBorderWidth = 3;
 	int filterXSize = 20;
 	int filterYSize = 20;
 	int totalNeighbours = filterXSize * filterYSize;
-	int iterations = 5;
+	int iterations = 3;
 
 	for(int h = 0; h < iterations; h++)
 	{
