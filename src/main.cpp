@@ -256,10 +256,12 @@ void eqSolverExercise()
 
     double A, B, C;
 
-    // (...)
+	A = 5;
+	B = 6;
+	C = 1;
 
-	bool hasRoots = true;
-    //bool hasRoots = solver.rootQuadEq(A, B, C, roots);
+	//bool hasRoots = true;
+    bool hasRoots = solver.rootQuadEq(A, B, C, roots);
 
     if(!hasRoots)
     {
@@ -267,8 +269,11 @@ void eqSolverExercise()
     }
     else
     {
-        // SHOW THE SOLUTIONS OF THE EQUATION
-        // (...)
+		float root1 = roots.values[0];
+		float root2 = roots.values[1];
+
+		std::cout << "Resultado: " << root1 << ", " << root2 << std::endl;
+		
     }
 }
 
@@ -305,15 +310,15 @@ int main()
 
 
     // ASSIGNMENT 1
-    transformationsExercise();
-    normalTransformExercise();
-    paintingAnImageExercise();
-    filteringAnImageExercise();
+    //transformationsExercise();
+    //normalTransformExercise();
+    //paintingAnImageExercise();
+    //filteringAnImageExercise();
 
     // ASSIGNMENT 2
-    //eqSolverExercise();
-    //completeSphereClassExercise();
-    //raytrace();
+    eqSolverExercise();
+    completeSphereClassExercise();
+    raytrace();
     std::cout << "\n\n" << std::endl;
 
     return 0;
