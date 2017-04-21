@@ -103,7 +103,7 @@ void normalTransformExercise()
     std::cout << "Scale Matrix: \n" << std::endl;
     std::cout << S << std::endl;
 
-	//We transfomr the vector v with the matrix S
+	//We transform the vector v with the matrix S
     Vector3D vTransformed = S.transformVector(v);
     std::cout << "Vector v\' = " << vTransformed << "\n" << std::endl;
 
@@ -245,8 +245,17 @@ void filteringAnImageExercise()
 
 void completeSphereClassExercise()
 {
-    // Make your intersection tests here
-    // (....)
+    
+	Matrix4x4 p = Matrix4x4::translate(Vector3D(0,0,3));
+	Sphere s = Sphere::Sphere(1, p);
+	std::cout << s << std::endl;
+
+	Ray r1 = Ray(Vector3D(0, 0, 0), Vector3D(0, 0, 1));
+	Ray r2 = Ray(Vector3D(0, 0, 0), Vector3D(0, 1, 0));
+
+	std::cout << "Ray 1: " << s.rayIntersectP(r1) << std::endl;
+	std::cout << "Ray 2: " << s.rayIntersectP(r2) << std::endl;
+
 }
 
 void eqSolverExercise()

@@ -9,13 +9,12 @@ bool Sphere::rayIntersectP(const Ray &ray) const
     // Pass the ray to local coordinates
     Ray r = worldToObject.transformRay(ray);
 
-    std::cout << "PLEASE COMPLETE THE Sphere::rayIntersectP() FUNCTION!" << std::endl;
-
     // The ray-sphere intersection equation can be expressed in the
     // form A*t^2 + B*t + C = 0, where:
-    /*double A = ;
-    double B = ;
-    double C = ;
+	
+    double A = VECTOR3D_H::dot(r.d, r.d);
+	double B = 2 * r.o.x*r.d.x + 2 * r.o.y*r.d.y + 2 * r.o.z*r.d.z;
+    double C = VECTOR3D_H::dot(r.o, r.o) - radius*radius;
 
     // Now we need to solve this quadratic equation for t
     EqSolver solver;
@@ -25,7 +24,7 @@ bool Sphere::rayIntersectP(const Ray &ray) const
     if(!hasRoots)
     {
         return false;
-    }*/
+    }
 
     return true;
 }
