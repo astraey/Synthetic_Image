@@ -301,11 +301,50 @@ void raytrace()
                              // meaning that the camera space = world space
     OrtographicCamera camOrtho(cameraToWorld, film);
 
+	Ray Ro;
+	Matrix4x4 p = Matrix4x4::translate(Vector3D(0, 0, 3));
+	Sphere s = Sphere::Sphere(1, p);
+	std::cout << s << std::endl;
+
+	for (int i = 0; i < resX; i++) {
+		for (int j = 0; j < resY; j++) {
+			double u = (i+0.5) / resX;
+			double v = (j+0.5) / resY;
+			Ro = camOrtho.generateRay(u, v);
+			
+			if (s.rayIntersectP(Ro)) {
+				film.setPixelValue(i, j, Vector3D(1, 0, 0));
+			}
+			else {
+				film.setPixelValue(i, j, Vector3D(0, 0, 0));
+			}
+		}
+	}
+
     /* ******************* */
     /* Perspective Camera */
     /* ******************* */
     double fovRadians = Utils::degreesToRadians(60);
     PerspectiveCamera camPersp(cameraToWorld, fovRadians, film);
+
+	Ray Rp;
+
+	std::cout << s << std::endl;
+
+	for (int i = 0; i < resX; i++) {
+		for (int j = 0; j < resY; j++) {
+			double u = (i + 0.5) / resX;
+			double v = (j + 0.5) / resY;
+			Rp = camPersp.generateRay(u, v);
+
+			if (s.rayIntersectP(Rp)) {
+				film.setPixelValue(i, j, Vector3D(1, 0, 0));
+			}
+			else {
+				film.setPixelValue(i, j, Vector3D(0, 0, 0));
+			}
+		}
+	}
 
     // Save the final result to file
     film.save();
@@ -325,8 +364,8 @@ int main()
     //filteringAnImageExercise();
 
     // ASSIGNMENT 2
-    eqSolverExercise();
-    completeSphereClassExercise();
+    //eqSolverExercise();
+    //completeSphereClassExercise();
     raytrace();
     std::cout << "\n\n" << std::endl;
 
