@@ -37,23 +37,23 @@ Vector3D DirectShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 
 			wo = (r.o - its.itsPoint).normalized();
 
-			if (dot(wo, wi) < 0)
-				return bgColor;
-			else
+			if (dot(wo, wi) > 0)
 			{
 
-				if (Utils::hasIntersection(R, objList))
-					return bgColor;
-				else
+				if (!Utils::hasIntersection(R, objList))
 				{
 
-					//Vector3D I = Utils::multiplyPerCanal(lsList[i].getIntensity(its.itsPoint), its.shape->getMaterial().getReflectance(its.normal, wo, wi));
 					Vector3D I = lsList[i].getIntensity(its.itsPoint);
+					//Vector3D I = Vector3D(1, 1, 1);
 
-					returnColor = returnColor.operator+=(I);
-					//std::cout <<I;
-					//return I;
 
+					Vector3D R = its.shape->getMaterial().getReflectance(its.normal, wo, wi);
+
+					returnColor += Utils::multiplyPerCanal(I, R);
+
+					//NEW CODE
+					//std::cout << R << wo << wi << std::endl;
+	
 				}
 
 			}
