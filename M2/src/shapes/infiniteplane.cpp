@@ -15,6 +15,18 @@ bool InfinitePlane::rayIntersectP(const Ray &rayWorld) const
 {
     // Compute the denominator of the tHit formula
     // (..)
+	
+	float dotProduct = dot(rayWorld.d, this->nWorld);
+
+	if(dotProduct == 0)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+
 
     // If the denominator is very close to zero, then the ray and the
     // plane are almost parallel
