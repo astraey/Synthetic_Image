@@ -95,7 +95,6 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	lightSourceList->push_back(l2);
 	lightSourceList->push_back(l3);
 
-
 	
 }
 
