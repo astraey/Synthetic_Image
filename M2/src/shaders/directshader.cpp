@@ -33,7 +33,7 @@ Vector3D DirectShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 			wi = D.normalized();
 
 			R = Ray(its.itsPoint, D.normalized());
-			R.maxT = D.lengthSq();
+			R.maxT = D.length();
 
 			wo = (r.o - its.itsPoint).normalized();
 
