@@ -96,6 +96,18 @@
     <ClCompile Include="..\..\src\shapes\sphere.cpp">
       <Filter>src\shapes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\materials\phong.cpp">
+      <Filter>src\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\shaders\depthshader.cpp">
+      <Filter>src\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\shaders\directshader.cpp">
+      <Filter>src\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\shapes\infiniteplane.cpp">
+      <Filter>src\shapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cameras\camera.h">
@@ -156,6 +168,15 @@
       <Filter>src\shapes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\shapes\sphere.h">
+      <Filter>src\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\materials\phong.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\shaders\directshader.h">
+      <Filter>src\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\shapes\infiniteplane.h">
       <Filter>src\shapes</Filter>
     </ClInclude>
   </ItemGroup>
