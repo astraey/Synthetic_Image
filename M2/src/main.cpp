@@ -19,6 +19,7 @@
 #include "shaders/directshader.h"
 #include "shaders/normalshader.h"
 #include "materials/phong.h"
+#include "materials/mirror.h"
 
 void buildSceneCornellBox(Camera* &cam, Film* &film,
 	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
@@ -39,7 +40,9 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	Material *greyDiffuse = new Phong(Vector3D(0.8, 0.8, 0.8), Vector3D(0, 0, 0), 100);
 	Material *blueDiffuse = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0, 0, 0), 100);
 	//Material *transmissive = new Transmissive(1.1, Vector3D(1));
-	//Material *mirror = new Mirror(Vector3D(1, 0.9, 0.85));
+	Material *mirror = new Mirror(Vector3D(1, 0.9, 0.85));
+	Material *transmissive = new Phong(Vector3D(1, 1, 0.2), Vector3D(1, 1, 0.2), 20);
+	//Material *mirror = new Phong(Vector3D(0.0, 0.9, 0.9), Vector3D(0.1, 0.9, 0.9), 50);
 	Material *red_100 = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0.7, 0.7, 0.2), 100);
 
 	/* ******* */
@@ -64,12 +67,10 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	Matrix4x4 sphereTransform1;
 	double radius = 1;
 	sphereTransform1 = Matrix4x4::translate(Vector3D(-offset + radius, -offset + radius, 3.5));
-	//Shape *s1 = new Sphere(1.5, sphereTransform1, mirror);
-	Shape *s1 = new Sphere(1.5, sphereTransform1, blueDiffuse);
+	Shape *s1 = new Sphere(1.5, sphereTransform1, mirror);
 	Matrix4x4 sphereTransform2;
 	sphereTransform2 = Matrix4x4::translate(Vector3D(1.0, 0.0, 2));
-	//Shape *s2 = new Sphere(1, sphereTransform2, transmissive);
-	Shape *s2 = new Sphere(1, sphereTransform2, redDiffuse);
+	Shape *s2 = new Sphere(1, sphereTransform2, transmissive);
 	Matrix4x4 sphereTransform3;
 	radius = 1;
 	sphereTransform3 = Matrix4x4::translate(Vector3D(0.3, -offset + radius, 5));
@@ -85,7 +86,7 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	Vector3D lightPosition1 = Vector3D(0, offset - 1, 2 * offset);
 	Vector3D lightPosition2 = Vector3D(0, offset - 1, 0);
 	Vector3D lightPosition3 = Vector3D(0, offset - 1, offset);
-	Vector3D intensity = Vector3D(10, 10, 10); // Radiant intensity (watts/sr)
+	Vector3D intensity = Vector3D(7, 7, 7); // Radiant intensity (watts/sr)
 	PointLightSource pointLS1(lightPosition1, intensity);
 	PointLightSource pointLS2(lightPosition2, intensity);
 	PointLightSource pointLS3(lightPosition3, intensity);
@@ -153,12 +154,6 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     /* ****** */
     /* Lights */
     /* ****** */
-    //
-    // ADD YOUR LIGHT SOURCES HERE
-    // (...)
-    //
-    // DO NOT FORGET TO STORE THE LIGHT SOURCES IN THE "lightSourceList"
-    // (...)
     //
 
 	lightSourceList = new std::vector<PointLightSource>;

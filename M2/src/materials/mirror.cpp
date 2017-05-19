@@ -1,16 +1,14 @@
-#include "phong.h"
+#include "mirror.h"
 
-Phong::Phong(Vector3D difuseColor_, Vector3D specularColor_, int s_)
+Mirror::Mirror(Vector3D specularColor_)
 {
 
-	this->s = s_;
-	this->kd = difuseColor_;
 	this->ks = specularColor_;
 
 }
 
 
-Vector3D Phong::getReflectance(const Vector3D &n, const Vector3D &wo, const Vector3D &wi) const
+Vector3D Mirror::getReflectance(const Vector3D &n, const Vector3D &wo, const Vector3D &wi) const
 {
 
 	//std::cout << n << wo << wi << this->kd << this->ks << this->s << std::endl;
@@ -23,19 +21,19 @@ Vector3D Phong::getReflectance(const Vector3D &n, const Vector3D &wo, const Vect
 	return reflectance;
 }
 
-bool Phong::hasSpecular() const
-{
-	return false;
-}
-bool Phong::hasTransmission() const
-{
-	return false;
-}
-bool Phong::hasDiffuseOrGlossy() const
+bool Mirror::hasSpecular() const
 {
 	return true;
 }
-double Phong::getIndexOfRefraction() const
+bool Mirror::hasTransmission() const
+{
+	return false;
+}
+bool Mirror::hasDiffuseOrGlossy() const
+{
+	return true;
+}
+double Mirror::getIndexOfRefraction() const
 {
 	return true;
 }
