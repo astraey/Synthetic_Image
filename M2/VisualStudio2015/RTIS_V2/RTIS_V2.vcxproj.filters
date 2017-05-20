@@ -108,6 +108,9 @@
     <ClCompile Include="..\..\src\shapes\infiniteplane.cpp">
       <Filter>src\shapes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\materials\mirror.cpp">
+      <Filter>src\materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cameras\camera.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\shapes\infiniteplane.h">
       <Filter>src\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\materials\mirror.h">
+      <Filter>src\materials</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
