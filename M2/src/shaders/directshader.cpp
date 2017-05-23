@@ -54,17 +54,18 @@ Vector3D DirectShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 						return computeColor(R2, objList, lsList);
 
 					}
+					else if (its.shape->getMaterial().hasDiffuseOrGlossy()) {
 
-					Vector3D I = lsList[i].getIntensity(its.itsPoint);
-					//Vector3D I = Vector3D(1, 1, 1);
+						Vector3D I = lsList[i].getIntensity(its.itsPoint);
+						//Vector3D I = Vector3D(1, 1, 1);
 
-					Vector3D R = its.shape->getMaterial().getReflectance(its.normal, wo, wi);
+						Vector3D R = its.shape->getMaterial().getReflectance(its.normal, wo, wi);
 
-					returnColor += Utils::multiplyPerCanal(I, R);
+						returnColor += Utils::multiplyPerCanal(I, R);
 
-					//NEW CODE
-					//std::cout << R << wo << wi << std::endl;
-	
+						//NEW CODE
+						//std::cout << R << wo << wi << std::endl;
+					}
 				}
 
 			}
