@@ -23,6 +23,11 @@ Vector3D Phong::getReflectance(const Vector3D &n, const Vector3D &wo, const Vect
 	return reflectance;
 }
 
+Vector3D Phong::getDiffuseCoefficient() const
+{
+	return this->kd;
+}
+
 bool Phong::hasSpecular() const
 {
 	return false;

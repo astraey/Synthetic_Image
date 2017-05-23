@@ -111,6 +111,12 @@
     <ClCompile Include="..\..\src\materials\mirror.cpp">
       <Filter>src\materials</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\materials\transmissive.cpp">
+      <Filter>src\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\shaders\globalshader.cpp">
+      <Filter>src\shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cameras\camera.h">
@@ -184,6 +190,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\materials\mirror.h">
       <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\materials\transmissive.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\shaders\globalshader.h">
+      <Filter>src\shaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

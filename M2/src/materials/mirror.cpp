@@ -21,6 +21,11 @@ Vector3D Mirror::getReflectance(const Vector3D &n, const Vector3D &wo, const Vec
 	return reflectance;
 }
 
+Vector3D Mirror::getDiffuseCoefficient() const
+{
+	return this->kd;
+}
+
 bool Mirror::hasSpecular() const
 {
 	return true;
