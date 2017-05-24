@@ -1,23 +1,4 @@
 ﻿  globalshader.cpp
 c:\users\astray\synthetic_image\m2\src\shaders\globalshader.cpp(23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  transmissive.cpp
-  phong.cpp
-  mirror.cpp
-  material.cpp
-  main.cpp
-  Generating Code...
-  Compiling...
-  directshader.cpp
-c:\users\astray\synthetic_image\m2\src\shaders\directshader.cpp(21): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  sphere.cpp
-  shape.cpp
-  infiniteplane.cpp
-  shader.cpp
-  normalshader.cpp
-  intersectionshader.cpp
-  depthshader.cpp
-  utils.cpp
   RTIS_V2.vcxproj -> C:\Users\astray\Synthetic_Image\M2\VisualStudio2015\RTIS_V2\x64\Debug\RTIS_V2.exe
   RTIS_V2.vcxproj -> C:\Users\astray\Synthetic_Image\M2\VisualStudio2015\RTIS_V2\x64\Debug\RTIS_V2.pdb (Full PDB)

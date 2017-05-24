@@ -4,6 +4,8 @@ Mirror::Mirror(Vector3D specularColor_)
 {
 
 	this->ks = specularColor_;
+	//WE ARE RETURNING THIS
+	this->kd = Vector3D(0,0,255);
 
 }
 
@@ -36,7 +38,7 @@ bool Mirror::hasTransmission() const
 }
 bool Mirror::hasDiffuseOrGlossy() const
 {
-	return true;
+	return false;
 }
 double Mirror::getIndexOfRefraction() const
 {

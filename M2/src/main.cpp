@@ -72,16 +72,16 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	Matrix4x4 sphereTransform1;
 	double radius = 1;
 	sphereTransform1 = Matrix4x4::translate(Vector3D(-offset + radius, -offset + radius, 3.5));
-	Shape *s1 = new Sphere(1.5, sphereTransform1, red_100);
+	Shape *s1 = new Sphere(1.5, sphereTransform1, mirror);
 	Matrix4x4 sphereTransform2;
 	sphereTransform2 = Matrix4x4::translate(Vector3D(1.0, 0.0, 2));
 	Shape *s2 = new Sphere(1, sphereTransform2, transmissive);
 	Matrix4x4 sphereTransform3;
 	radius = 1;
 	sphereTransform3 = Matrix4x4::translate(Vector3D(0.3, -offset + radius, 5));
-	Shape *s3 = new Sphere(radius, sphereTransform3, mirror);
-	//objectsList->push_back(s1);
-	//objectsList->push_back(s2);
+	Shape *s3 = new Sphere(radius, sphereTransform3, red_100);
+	objectsList->push_back(s1);
+	objectsList->push_back(s2);
 	objectsList->push_back(s3);
 
 	/* ****** */
@@ -96,8 +96,8 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	PointLightSource pointLS2(lightPosition2, intensity);
 	PointLightSource pointLS3(lightPosition3, intensity);
 	lightSourceList->push_back(pointLS1);
-	//lightSourceList->push_back(pointLS2);
-	//lightSourceList->push_back(pointLS3);
+	lightSourceList->push_back(pointLS2);
+	lightSourceList->push_back(pointLS3);
 }
 
 void buildSceneSphere(Camera* &cam, Film* &film,
@@ -233,8 +233,8 @@ int main()
     //Shader *shader = new IntersectionShader (intersectionColor, bgColor);
 	//Shader *shader = new DepthShader(intersectionColor, 10, bgColor);
 	//Shader *shader = new NormalShader(bgColor);
-	//Shader *shader = new DirectShader(Vector3D(0.4, 1, 0.4), 10, bgColor);
-	Shader *shader = new GlobalShader(Vector3D(0.4, 1, 0.4), 10, bgColor, Vector3D(0.1, 0.1, 0.1));
+	Shader *shader = new DirectShader(Vector3D(0.4, 1, 0.4), 10, bgColor);
+	//Shader *shader = new GlobalShader(Vector3D(0.4, 1, 0.4), 10, bgColor, Vector3D(0.1, 0.1, 0.1));
 
 
     // Declare pointers to all the variables which describe the scene
