@@ -14,53 +14,60 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 {
 	Intersection its;
 
+	//We return bgColor if there are no intersections between the ray and any object from objList
 	if (!Utils::getClosestIntersection(r, objList, its)) return bgColor;
 
-	Vector3D color, indirect, wr, wo = -r.d.normalized();
+	Vector3D wr, wo = -r.d.normalized();
+	Vector3D returnColor = Vector3D(0, 0, 0), indirectContribution = Vector3D(0, 0, 0);
 
 	//PHONG
 	if (its.shape->getMaterial().hasDiffuseOrGlossy())
 	{
+
+		//Direct Light Computations
 		for (int i = 0; i < lsList.size(); i++)
 		{
 			Vector3D direction(lsList[i].getPosition() - its.itsPoint);
-			double distanceLS = direction.length();
+			double distance = direction.length();
 			Vector3D wi = direction.normalized();
 
-			Ray shadowRay(its.itsPoint, wi);
-			shadowRay.maxT = distanceLS;
+			Ray shadeRay =  Ray(its.itsPoint, wi);
+			shadeRay.maxT = distance;
 
-			if (!Utils::hasIntersection(shadowRay, objList) && dot(its.normal, wi) > 0) {
-				color += Utils::multiplyPerCanal(its.shape->getMaterial().getReflectance(its.normal, wo, wi),
+			if (!Utils::hasIntersection(shadeRay, objList) && dot(its.normal, wi) > 0) {
+				returnColor += Utils::multiplyPerCanal(its.shape->getMaterial().getReflectance(its.normal, wo, wi),
 					lsList[i].getIntensity(its.itsPoint));
 			}
 		}
 
 
-		//Indirect Light
 
-		//First Iteraction
+		//Indirect Light Computations
+
+		//Cast of the rays
 		if (r.depth == 0) {
 			for (int i = 0; i < rays; i++) {
 				wr = sampler.getSample(its.normal);
 				Ray emmitedRay = Ray(its.itsPoint, wr, r.depth + 1);
-				indirect += Utils::multiplyPerCanal(computeColor(emmitedRay, objList, lsList),
+				indirectContribution += Utils::multiplyPerCanal(computeColor(emmitedRay, objList, lsList),
 					its.shape->getMaterial().getReflectance(its.normal, wr, wo));
 			}
-			indirect /= rays;
+			indirectContribution /= rays;
 		}
 
+		//Bounce Control
 		else if (r.depth >= maxDepth) {
 			Vector3D at = Vector3D(0.1, 0.1, 0.1);
 			Vector3D kd = its.shape->getMaterial().getDiffuseCoefficient();
-			indirect = Utils::multiplyPerCanal(kd, at);
+			indirectContribution = Utils::multiplyPerCanal(kd, at);
 		}
 
+		//Color Computation
 		else {
 			Ray rn = Ray(its.itsPoint, its.normal.normalized(), r.depth + 1);
 			Ray rr = Ray(its.itsPoint, Utils::computeReflectionDirection(r.d, its.normal.normalized()),
 				r.depth + 1);
-			indirect = (computeColor(rn, objList, lsList) + computeColor(rr, objList, lsList)) *.5;
+			indirectContribution = (computeColor(rn, objList, lsList) + computeColor(rr, objList, lsList)) *.5;
 		}
 
 	}
@@ -105,5 +112,5 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 	}
 
 
-	return color + indirect;
+	return returnColor + indirectContribution;
 }
