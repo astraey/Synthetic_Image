@@ -16,7 +16,7 @@ public:
 
 	Vector3D bgColor;
 	int rays;
-	int bounces;
+	int maxDepth;
 	HemisphericalSampler sampler;
 };
 #endif // !GLOBALSHADER

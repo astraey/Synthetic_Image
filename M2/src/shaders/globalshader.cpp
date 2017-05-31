@@ -5,7 +5,7 @@ GlobalShader::GlobalShader()
 {
 }
 
-GlobalShader::GlobalShader(Vector3D bgColor_, int rays_, int bounces_) : bgColor(bgColor_), rays(rays_), bounces(bounces_)
+GlobalShader::GlobalShader(Vector3D bgColor_, int rays_, int maxDepth_) : bgColor(bgColor_), rays(rays_), maxDepth(maxDepth_)
 {
 }
 
@@ -50,7 +50,7 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 			indirect /= rays;
 		}
 
-		else if (r.depth == bounces) {
+		else if (r.depth >= maxDepth) {
 			Vector3D at = Vector3D(0.1, 0.1, 0.1);
 			Vector3D kd = its.shape->getMaterial().getDiffuseCoefficient();
 			indirect = Utils::multiplyPerCanal(kd, at);
