@@ -67,7 +67,7 @@ Vector3D DirectShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 		else if (its.shape->getMaterial().hasSpecular())
 		{
 
-			Vector3D wr = its.normal*(dot(wo, its.normal)) * 2 - wo;
+			wr = its.normal*(dot(wo, its.normal)) * 2 - wo;
 			Ray R2 = Ray(its.itsPoint, wr);
 			return computeColor(R2, objList, lsList);
 

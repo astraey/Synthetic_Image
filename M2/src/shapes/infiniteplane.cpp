@@ -44,10 +44,7 @@ bool InfinitePlane::rayIntersect(const Ray &rayWorld, Intersection &its) const
 
     // Effectivelly compute the intersection distance
 
-	//double tHit = dot((this->p0World - rayWorld.o), this->nWorld) / denominator;
-	double tHit = dot((p0World - rayWorld.o), this->nWorld) / std::abs(denominator);
-
-
+	double tHit = dot((this->p0World - rayWorld.o), this->nWorld) / denominator;
 
 	Vector3D pHit = rayWorld.o + rayWorld.d * tHit;
 

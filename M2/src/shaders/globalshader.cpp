@@ -1,83 +1,109 @@
 #include "globalshader.h"
 #include "../core/utils.h"
 
-//DepthShader::DepthShader()
-//{}
-
-GlobalShader::GlobalShader(Vector3D color_, double maxDist_, Vector3D bgColor_, Vector3D at_) :
-	Shader(bgColor_)
-
+GlobalShader::GlobalShader()
 {
-	this->maxDist = maxDist_;
-	this->color = color_;
-	this->at = at_;
-	
 }
 
-Vector3D GlobalShader::computeColor(const Ray &r, const std::vector<Shape *> &objList, const std::vector<PointLightSource> &lsList) const
+GlobalShader::GlobalShader(Vector3D bgColor_, int rays_, int bounces_) : bgColor(bgColor_), rays(rays_), bounces(bounces_)
 {
+}
 
-
+Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& objList,
+	const std::vector<PointLightSource>& lsList) const
+{
 	Intersection its;
-	Vector3D Distance;
-	int nL = lsList.size();
-	Ray R;
-	Vector3D wi;
-	Vector3D wo = - r.d;
 
-	Vector3D returnColor = bgColor;
+	if (!Utils::getClosestIntersection(r, objList, its)) return bgColor;
 
-	if (Utils::getClosestIntersection(r, objList, its))
+	Vector3D color, indirect, wr, wo = -r.d.normalized();
+
+	//PHONG
+	if (its.shape->getMaterial().hasDiffuseOrGlossy())
 	{
-
-		//Phong
-		if (its.shape->getMaterial().hasDiffuseOrGlossy()) {
-
-			for (int i = 0; i < nL; i++)
-			{
-
-				Vector3D D = lsList[i].getPosition() - its.itsPoint;
-				wi = D.normalized();
-
-				R = Ray(its.itsPoint, wi);
-				R.maxT = D.length();
-
-				if (!Utils::hasIntersection(R, objList))
-				{
-
-					if (dot(its.normal, wi) > 0)
-					{
-
-
-						Vector3D I = lsList[i].getIntensity(its.itsPoint);
-
-						Vector3D R = its.shape->getMaterial().getReflectance(its.normal, wo, wi);
-
-						returnColor += Utils::multiplyPerCanal(I, R);
-
-
-					}
-				}
-			}
-			return returnColor + Utils::multiplyPerCanal(this->at, its.shape->getMaterial().getDiffuseCoefficient());
-
-		}
-
-		//MIRROR
-		else if (its.shape->getMaterial().hasSpecular())
+		for (int i = 0; i < lsList.size(); i++)
 		{
+			Vector3D direction(lsList[i].getPosition() - its.itsPoint);
+			double distanceLS = direction.length();
+			Vector3D wi = direction.normalized();
 
-			Vector3D wr = its.normal*(dot(wo, its.normal)) * 2 - wo;
-			Ray R2 = Ray(its.itsPoint, wr);
-			return computeColor(R2, objList, lsList);
+			Ray shadowRay(its.itsPoint, wi);
+			shadowRay.maxT = distanceLS;
 
+			if (!Utils::hasIntersection(shadowRay, objList) && dot(its.normal, wi) > 0) {
+				color += Utils::multiplyPerCanal(its.shape->getMaterial().getReflectance(its.normal, wo, wi),
+					lsList[i].getIntensity(its.itsPoint));
+			}
+		}
+
+
+		//Indirect Light
+
+		//First Iteraction
+		if (r.depth == 0) {
+			for (int i = 0; i < rays; i++) {
+				wr = sampler.getSample(its.normal);
+				Ray emmitedRay = Ray(its.itsPoint, wr, r.depth + 1);
+				indirect += Utils::multiplyPerCanal(computeColor(emmitedRay, objList, lsList),
+					its.shape->getMaterial().getReflectance(its.normal, wr, wo));
+			}
+			indirect /= rays;
+		}
+
+		else if (r.depth == bounces) {
+			Vector3D at = Vector3D(0.1, 0.1, 0.1);
+			Vector3D kd = its.shape->getMaterial().getDiffuseCoefficient();
+			indirect = Utils::multiplyPerCanal(kd, at);
+		}
+
+		else {
+			Ray rn = Ray(its.itsPoint, its.normal.normalized(), r.depth + 1);
+			Ray rr = Ray(its.itsPoint, Utils::computeReflectionDirection(r.d, its.normal.normalized()),
+				r.depth + 1);
+			indirect = (computeColor(rn, objList, lsList) + computeColor(rr, objList, lsList)) *.5;
 		}
 
 	}
 
-	else
-	{
-		return bgColor;
+
+
+	//MIRROR
+	else if (its.shape->getMaterial().hasSpecular()) {
+
+		if (dot(its.normal, wo) < 0) return bgColor;
+
+		wr = Utils::computeReflectionDirection(r.d, its.normal);
+		Ray reflectedRay = Ray(its.itsPoint, wr, r.depth);
+		return computeColor(reflectedRay, objList, lsList);
+
 	}
 
+	//Teransmissive
+	else if (its.shape->getMaterial().hasTransmission()) {
+		double eta, cosThetaI, cosThetaT_out;
+		Vector3D normal = its.normal.normalized();
+
+		cosThetaI = dot(normal, wo);
+
+		eta = its.shape->getMaterial().getIndexOfRefraction();
+
+		if (cosThetaI < 0) {
+			eta = 1 / eta;
+			normal = -normal;
+			cosThetaI = dot(wo, normal);
+		}
+
+
+		if (!Utils::isTotalInternalReflection(eta, cosThetaI, cosThetaT_out))
+			wr = Utils::computeTransmissionDirection(r, normal, eta, cosThetaI, cosThetaT_out);
+
+		else
+			wr = Utils::computeReflectionDirection(r.d, normal);
+
+		Ray refractedRay = Ray(its.itsPoint, wr, r.depth);
+		return computeColor(refractedRay, objList, lsList);
+	}
+
+
+	return color + indirect;
 }
