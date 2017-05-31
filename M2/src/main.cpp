@@ -234,7 +234,7 @@ int main()
 	//Shader *shader = new DepthShader(intersectionColor, 10, bgColor);
 	//Shader *shader = new NormalShader(bgColor);
 	//Shader *shader = new DirectShader(Vector3D(0.4, 1, 0.4), 10, bgColor);
-	Shader *shader = new GlobalShader(bgColor, 10, 2);
+	Shader *shader = new GlobalShader(bgColor, 2,10);
 
 
     // Declare pointers to all the variables which describe the scene
