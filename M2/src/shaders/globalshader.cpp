@@ -15,7 +15,7 @@ GlobalShader::GlobalShader(Vector3D color_, double maxDist_, Vector3D bgColor_, 
 Vector3D GlobalShader::computeColor(const Ray &r, const std::vector<Shape *> &objList, const std::vector<PointLightSource> &lsList) const
 {
 
-
+	
 	Intersection its;
 	Vector3D Distance;
 	int nL = lsList.size();
@@ -24,6 +24,8 @@ Vector3D GlobalShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 	Vector3D wo = - r.d;
 
 	Vector3D returnColor = bgColor;
+
+	Vector3D Indirect = Vector3D(0,0,0);
 
 	if (Utils::getClosestIntersection(r, objList, its))
 	{
@@ -50,53 +52,22 @@ Vector3D GlobalShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 
 			// COmpute indirect illumination
 			if (r.depth > 0) {
-				Vector3D Indirect = Utils::multiplyPerCanal(this->at, its.shape->getMaterial().getDiffuseCoefficient());
-				return returnColor + Indirect;
+				Indirect = Utils::multiplyPerCanal(this->at, its.shape->getMaterial().getDiffuseCoefficient());
+				//return returnColor + Indirect;
 			}
 			else if (r.depth == 0) {
 				for (int i = 0; i < r.maxT; i++) {
 					HemisphericalSampler sampler;
 					Vector3D randomDirection = sampler.getSample(its.normal); //direccion aleatoria
-					Vector3D I = randomDirection(i).computeColor();
-					//computeColor(randomDirection(i));
-					Vector3D R = its.shape->getMaterial().getReflectance(its.normal, wo, wi);
-					Vector3D Indirect2;
-					Indirect2 += Utils::multiplyPerCanal(I, wo); // multiplicar color de direccion aleatoria por wo
-					double M = 1 / r.maxT;
+					Ray R0 = Ray(its.itsPoint, randomDirection, r.depth + 1);
+					Vector3D I = computeColor(R0,objList,lsList);
+					Vector3D R = its.shape->getMaterial().getReflectance(its.normal,randomDirection, wo);
+				    Indirect += Utils::multiplyPerCanal(I, R); // multiplicar color de direccion aleatoria por wo
+					
 				}
-				return Indirect2*M;// +returnColor??
+				Indirect /= r.maxT;
 			}
-
-				/*
-				//Condicion nueva
-				else if (R.depth == 0) {
-					Vector3D D = lsList[i].getPosition() - its.itsPoint;
-					wi = D.normalized();
-
-					R = Ray(its.itsPoint, wi,11,0,10);
-					R.maxT = D.length(); //posible =10
-
-					if (!Utils::hasIntersection(R, objList))
-					{
-
-						if (dot(its.normal, wi) > 0)
-						{
-
-
-							Vector3D I = lsList[i].getIntensity(wi);//prueba --> sampler.getSample(normal)
-
-							Vector3D R = its.shape->getMaterial().getReflectance(its.normal, wo, wi);
-
-							returnColor += Utils::multiplyPerCanal(I, R);
-
-
-						}
-					}
-					double M = 1 / R.depth;
-
-					return returnColor* M;
-					*/
-				
+			return returnColor + Indirect;
 		}
 
 		//MIRROR
