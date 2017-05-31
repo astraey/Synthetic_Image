@@ -22,14 +22,15 @@ Vector3D DirectShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 	int nL = lsList.size();
 	Ray R;
 	Vector3D wi;
-	Vector3D wo = -r.d;
+	Vector3D wo = -r.d.normalized();
+	Vector3D wr = -r.d.normalized();
 
 	Vector3D returnColor = bgColor;
 
 	if (Utils::getClosestIntersection(r, objList, its))
 	{
 
-		//Phong
+		//PHONG
 		if (its.shape->getMaterial().hasDiffuseOrGlossy()) {
 
 			for (int i = 0; i < nL; i++)
@@ -70,6 +71,31 @@ Vector3D DirectShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 			Ray R2 = Ray(its.itsPoint, wr);
 			return computeColor(R2, objList, lsList);
 
+		}
+
+		//TRANSMISSIVE
+		else if (its.shape->getMaterial().hasTransmission()) {
+			
+			Vector3D normal = its.normal;
+			double cosThetaI = dot(normal, wo);
+			double eta = its.shape->getMaterial().getIndexOfRefraction();
+			double cosThetaT_out;
+
+			if (cosThetaI < 0) {
+				eta = 1 / eta;
+				normal = -normal;
+				cosThetaI = dot(wo, normal);
+			}
+
+
+			if (!Utils::isTotalInternalReflection(eta, cosThetaI, cosThetaT_out))
+				wr = Utils::computeTransmissionDirection(r, normal, eta, cosThetaI, cosThetaT_out);
+
+			else
+				wr = Utils::computeReflectionDirection(r.d, normal);
+
+			Ray refRay = Ray(its.itsPoint, wr, r.depth + 1);
+			return computeColor(refRay, objList, lsList);
 		}
 
 	}

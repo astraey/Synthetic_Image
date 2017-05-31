@@ -44,8 +44,8 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	Material *blueDiffuse = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0, 0, 0), 100);
 	
 	Material *mirror = new Mirror(Vector3D(1, 0.9, 0.85));
-	Material *transmissive = new Phong(Vector3D(1, 1, 0.2), Vector3D(1, 1, 0.2), 20);
-	//Material *transmissive = new Transmissive(1.1, Vector3D(1));
+	//Material *transmissive = new Phong(Vector3D(1, 1, 0.2), Vector3D(1, 1, 0.2), 20);
+	Material *transmissive = new Transmissive(1.1, Vector3D(1));
 	//Material *transmissive = new Transmissive(Vector3D(1, 0.9, 0.85));
 
 	Material *red_100 = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0.7, 0.7, 0.2), 100);
@@ -233,8 +233,8 @@ int main()
     //Shader *shader = new IntersectionShader (intersectionColor, bgColor);
 	//Shader *shader = new DepthShader(intersectionColor, 10, bgColor);
 	//Shader *shader = new NormalShader(bgColor);
-	//Shader *shader = new DirectShader(Vector3D(0.4, 1, 0.4), 10, bgColor);
-	Shader *shader = new GlobalShader(Vector3D(0.4, 1, 0.4), 10, bgColor, Vector3D(0.1, 0.1, 0.1));
+	Shader *shader = new DirectShader(Vector3D(0.4, 1, 0.4), 10, bgColor);
+	//Shader *shader = new GlobalShader(Vector3D(0.4, 1, 0.4), 10, bgColor, Vector3D(0.1, 0.1, 0.1));
 
 
     // Declare pointers to all the variables which describe the scene
