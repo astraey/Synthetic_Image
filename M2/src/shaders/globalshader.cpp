@@ -19,6 +19,7 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 
 	Vector3D wr, wo = -r.d.normalized();
 	Vector3D returnColor = Vector3D(0, 0, 0), indirectContribution = Vector3D(0, 0, 0);
+	Vector3D at = Vector3D(0.1, 0.1, 0.1);
 
 	//PHONG
 	if (its.shape->getMaterial().hasDiffuseOrGlossy())
@@ -48,8 +49,8 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 		if (r.depth == 0) {
 			for (int i = 0; i < rays; i++) {
 				wr = sampler.getSample(its.normal);
-				Ray emmitedRay = Ray(its.itsPoint, wr, r.depth + 1);
-				indirectContribution += Utils::multiplyPerCanal(computeColor(emmitedRay, objList, lsList),
+				Ray emitedRay = Ray(its.itsPoint, wr, r.depth + 1);
+				indirectContribution += Utils::multiplyPerCanal(computeColor(emitedRay, objList, lsList),
 					its.shape->getMaterial().getReflectance(its.normal, wr, wo));
 			}
 			indirectContribution /= rays;
@@ -57,7 +58,6 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 
 		//Bounce Control
 		else if (r.depth >= maxDepth) {
-			Vector3D at = Vector3D(0.1, 0.1, 0.1);
 			Vector3D kd = its.shape->getMaterial().getDiffuseCoefficient();
 			indirectContribution = Utils::multiplyPerCanal(kd, at);
 		}
@@ -87,22 +87,22 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 
 	//Teransmissive
 	else if (its.shape->getMaterial().hasTransmission()) {
-		double eta, cosThetaI, cosThetaT_out;
+		double ETA, cosThetaI, cosThetaT;
 		Vector3D normal = its.normal.normalized();
 
 		cosThetaI = dot(normal, wo);
 
-		eta = its.shape->getMaterial().getIndexOfRefraction();
+		ETA = its.shape->getMaterial().getIndexOfRefraction();
 
 		if (cosThetaI < 0) {
-			eta = 1 / eta;
+			ETA = 1 / ETA;
 			normal = -normal;
 			cosThetaI = dot(wo, normal);
 		}
 
 
-		if (!Utils::isTotalInternalReflection(eta, cosThetaI, cosThetaT_out))
-			wr = Utils::computeTransmissionDirection(r, normal, eta, cosThetaI, cosThetaT_out);
+		if (!Utils::isTotalInternalReflection(ETA, cosThetaI, cosThetaT))
+			wr = Utils::computeTransmissionDirection(r, normal, ETA, cosThetaI, cosThetaT);
 
 		else
 			wr = Utils::computeReflectionDirection(r.d, normal);
