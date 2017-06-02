@@ -1,10 +1,13 @@
 #include "bitmap.h"
 
+
+
 #include <iostream>
 #include <fstream>
 #include <stdint.h>
 #include <algorithm>
 #include <string>
+#include <sstream>
 
 BitMap::BitMap()
 {
@@ -166,4 +169,76 @@ int BitMap::save(Vector3D** &data, const size_t &width, const size_t &height)
                   << "example.bmp" << "\"" << std::endl;
         return 1;
     }
+}
+
+int BitMap::saveFrame(Vector3D** &data, const size_t &width, const size_t &height)
+{
+
+	extern int frameCounter;
+
+	std::cout <<"Frame " << frameCounter << " Rendered" << std::endl;
+	frameCounter++;
+
+
+	std::ostringstream oss;
+	oss << "Rendered Frames/" << frameCounter << ".bmp";
+	std::string fileName = oss.str();
+
+	// Create file header
+	bmp24_file_header fileHeader;
+
+	// Create info header
+	bmp24_info_header infoHeader(width, height);
+
+	std::ofstream outputFile;
+
+
+	//std::string s1 = std::to_string(FrameCounter);
+
+	//outputFile.open("./outputa.bmp", std::ios::binary | std::ios::out);
+	outputFile.open(fileName, std::ios::binary | std::ios::out);
+
+	if (outputFile.is_open())
+	{
+		// Write the file header
+		outputFile.write(fileHeader.toCharBlock(), 14);
+
+		// Write the info header
+		outputFile.write(infoHeader.toCharBlock(), 40);
+
+		int extra_bytes = (4 - (infoHeader.width * 3) % 4) % 4;
+		void* padd = (void*)malloc(extra_bytes);
+
+		// Store the image in the BMP format (bottom-up, i.e.,
+		//  first row stores is the lowermost one)
+		for (size_t row = height; row > 0; row--)
+		{
+			for (size_t col = 0; col < width; col++)
+			{
+				// Get the pixel value
+				Vector3D p = data[row - 1][col];
+				uint8_t red = (uint8_t)(std::min(p.x, 1.0) * 255);
+				uint8_t green = (uint8_t)(std::min(p.y, 1.0) * 255);
+				uint8_t blue = (uint8_t)(std::min(p.z, 1.0) * 255);
+
+				// Write the pixel value
+				outputFile.write(reinterpret_cast<const char *>(&blue), 1); // blue
+				outputFile.write(reinterpret_cast<const char *>(&green), 1); // green
+				outputFile.write(reinterpret_cast<const char *>(&red), 1); // red
+
+			}
+			// Padd the rest of the row;
+			outputFile.write(reinterpret_cast<const char *>(padd), extra_bytes);
+		}
+
+		outputFile.close();
+		return 0;
+	}
+	else
+	{
+		// Problem opening file
+		std::cout << "Problem at BitMap::save() : Could not open file \""
+			<< "example.bmp" << "\"" << std::endl;
+		return 1;
+	}
 }

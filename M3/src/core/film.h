@@ -30,6 +30,7 @@ public:
 
     // Other functions
     int save();
+	int saveFrame();
     void clearData();
 
 private:

@@ -62,6 +62,7 @@ struct bmp24_info_header
     long	  clr_used;         // 0
     long	  clr_important;    // 0
 
+
     /**
      * @brief bmp24_info_header
      * @param width_
@@ -105,7 +106,11 @@ class BitMap
 public:
     BitMap();
 
+	int frameCounter = 0;
+
+
     static int save(Vector3D** &data, const size_t &width, const size_t &height);
+	static int saveFrame(Vector3D** &data, const size_t &width, const size_t &height);
     static int read(Vector3D** &dataOut, size_t &width, size_t &height, std::string &fileName);
 };
 

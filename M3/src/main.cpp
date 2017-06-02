@@ -23,6 +23,7 @@
 #include "materials/mirror.h"
 #include "materials/transmissive.h"
 
+int frameCounter = 0;
 
 void buildSceneCornellBox(Camera* &cam, Film* &film,
 	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
@@ -215,46 +216,58 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
     }
 }
 
-int main()
-{
-	
-    std::string separator     = "\n----------------------------------------------\n";
-    std::string separatorStar = "\n**********************************************\n";
-    std::cout << separator << "RTIS - Ray Tracer for \"Imatge Sintetica\"" << separator << std::endl;
-
-    // Create an empty film
-    Film *film;
-    film = new Film(720, 576);
+void renderFrame() {
 
 
-    // Declare the shader
-    Vector3D bgColor(0.0, 0.0, 0.0); // Background color (for rays which do not intersect anything)
-    Vector3D intersectionColor(1,0,0);
-    //Shader *shader = new IntersectionShader (intersectionColor, bgColor);
+	//std::string separator = "\n----------------------------------------------\n";
+	//std::string separatorStar = "\n**********************************************\n";
+	//std::cout << separator << "RTIS - Ray Tracer for \"Imatge Sintetica\"" << separator << std::endl;
+
+	// Create an empty film
+	Film *film;
+	film = new Film(720, 576);
+
+
+	// Declare the shader
+	Vector3D bgColor(0.0, 0.0, 0.0); // Background color (for rays which do not intersect anything)
+	Vector3D intersectionColor(1, 0, 0);
+	//Shader *shader = new IntersectionShader (intersectionColor, bgColor);
 	//Shader *shader = new DepthShader(intersectionColor, 10, bgColor);
 	//Shader *shader = new NormalShader(bgColor);
-	//Shader *shader = new DirectShader(Vector3D(0.4, 1, 0.4), 10, bgColor);
-	Shader *shader = new GlobalShader(bgColor, 2,10);
+	Shader *shader = new DirectShader(Vector3D(0.4, 1, 0.4), 10, bgColor);
+	//Shader *shader = new GlobalShader(bgColor, 2,10);
 
 
-    // Declare pointers to all the variables which describe the scene
-    Camera *cam;
-    std::vector<Shape*> *objectsList;
-    std::vector<PointLightSource> *lightSourceList;
+	// Declare pointers to all the variables which describe the scene
+	Camera *cam;
+	std::vector<Shape*> *objectsList;
+	std::vector<PointLightSource> *lightSourceList;
 
-    // Build the scene
-    //buildSceneSphere(cam, film, objectsList, lightSourceList);
+	// Build the scene
+	//buildSceneSphere(cam, film, objectsList, lightSourceList);
 	buildSceneCornellBox(cam, film, objectsList, lightSourceList);
 
-    // Launch some rays!
-    raytrace(cam, shader, film, objectsList, lightSourceList);
+	// Launch some rays!
+	raytrace(cam, shader, film, objectsList, lightSourceList);
 
-    // Save the final result to file
-    std::cout << "\n\nSaving the result to file output.bmp\n" << std::endl;
-    film->save();
+	// Save the final result to file
+	//std::cout << "\n\nSaving the result to file output.bmp\n" << std::endl;
+	film->saveFrame();
 
-    std::cout << "\n\n" << std::endl;
-    return 0;
+	//std::cout << "\n\n" << std::endl;
 
-	
+}
+
+int main()
+{
+
+	std::cout << "****************** Frame Rendering Started******************" << std::endl;
+
+	for (int i = 0; i < 5; i++)
+	{
+		renderFrame();
+	}
+
+	std::cout << "****************** Frame Rendering Finished******************" << std::endl;
+
 }
