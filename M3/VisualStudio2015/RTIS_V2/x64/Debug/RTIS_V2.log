@@ -1,0 +1,4 @@
+﻿  globalshader.cpp
+c:\users\astray\synthetic_image\m2\src\shaders\globalshader.cpp(23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  RTIS_V2.vcxproj -> C:\Users\astray\Synthetic_Image\M2\VisualStudio2015\RTIS_V2\x64\Debug\RTIS_V2.exe
+  RTIS_V2.vcxproj -> C:\Users\astray\Synthetic_Image\M2\VisualStudio2015\RTIS_V2\x64\Debug\RTIS_V2.pdb (Full PDB)
