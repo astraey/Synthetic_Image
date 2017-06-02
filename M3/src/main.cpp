@@ -25,6 +25,8 @@
 
 int frameCounter = 0;
 
+double testPos = 4;
+
 void buildSceneCornellBox(Camera* &cam, Film* &film,
 	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
 {
@@ -72,7 +74,7 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	// Place the Spheres inside the Cornell Box
 	Matrix4x4 sphereTransform1;
 	double radius = 1;
-	sphereTransform1 = Matrix4x4::translate(Vector3D(-offset + radius, -offset + radius, 3.5));
+	sphereTransform1 = Matrix4x4::translate(Vector3D(-offset + radius, -offset + radius, testPos));
 	Shape *s1 = new Sphere(1.5, sphereTransform1, mirror);
 	Matrix4x4 sphereTransform2;
 	sphereTransform2 = Matrix4x4::translate(Vector3D(1.0, 0.0, 2));
@@ -101,85 +103,6 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	lightSourceList->push_back(pointLS3);
 }
 
-void buildSceneSphere(Camera* &cam, Film* &film,
-                      std::vector<Shape*>* &objectsList,
-                      std::vector<PointLightSource>* &lightSourceList)
-{
-    /* **************************** */
-    /* Declare and place the camera */
-    /* **************************** */
-    // By default, this gives an ID transform
-    //  which means that the camera is located at (0, 0, 0)
-    //  and looking at the "+z" direction
-    Matrix4x4 cameraToWorld;
-    double fovDegrees = 60;
-    double fovRadians = Utils::degreesToRadians(fovDegrees);
-    cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
-
-    /* ************************** */
-    /* DEFINE YOUR MATERIALS HERE */
-    /* ************************** */
-    Material *green_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 80);
-	Material *red_50 = new Phong(Vector3D(0.7, 0.2, 0.2), Vector3D(0.6, 0.2, 0.2), 80);
-	Material *blue_50 = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0.2, 0.2, 0.6), 80);
-	Material *white_50 = new Phong(Vector3D(0.9, 0.9, 0.9), Vector3D(0.8, 0.8, 0.8), 80);
-
-
-
-    /* ******* */
-    /* Objects */
-    /* ******* */
-    // Create a heterogeneous list of objects of type shape
-    // (some might be triangles, other spheres, plans, etc)
-    objectsList = new std::vector<Shape*>;
-
-    // Define and place a sphere
-    Matrix4x4 sphereTransform1;
-    sphereTransform1 = sphereTransform1.translate(Vector3D(-1.0, -0.5, 2*std::sqrt(2.0)));
-    Shape *s1 = new Sphere (0.25, sphereTransform1, blue_50);
-
-    // Define and place a sphere
-    Matrix4x4 sphereTransform2;
-    sphereTransform2 = sphereTransform2.translate(Vector3D(1.0, 0.0, 6));
-    Shape *s2 = new Sphere (1, sphereTransform2, green_50);
-
-    // Define and place a sphere
-    Matrix4x4 sphereTransform3;
-    sphereTransform3 = sphereTransform3.translate(Vector3D(0.3, -0.75, 3.5));
-    Shape *s3 = new Sphere (0.25, sphereTransform3, red_50);
-
-	Shape *ip = new InfinitePlane(Vector3D(0, -1.5, 0), Vector3D(0, 1, 0), white_50);
-    
-	// Store the objects in the object list
-    objectsList->push_back(s1);
-    objectsList->push_back(s2);
-    objectsList->push_back(s3);
-	objectsList->push_back(ip);
-
-
-    /* ****** */
-    /* Lights */
-    /* ****** */
-    //
-
-	lightSourceList = new std::vector<PointLightSource>;
-
-	//PointLightSource l1 = PointLightSource(Vector3D(-1, -1, -1), Vector3D(1, 1, 1));
-	//PointLightSource l2 = PointLightSource(Vector3D(-2, 0, 0), Vector3D(1, 1, 1));
-	//PointLightSource l3 = PointLightSource(Vector3D(-2, 0, 0), Vector3D(1, 1, 1));
-
-	PointLightSource l1 = PointLightSource(Vector3D(1, 2, -1), Vector3D(15, 15, 15));
-	PointLightSource l2 = PointLightSource(Vector3D(3, 4, -1), Vector3D(15, 15, 15));
-	PointLightSource l3 = PointLightSource(Vector3D(3, 3, 3), Vector3D(15, 15, 15));
-	PointLightSource l4 = PointLightSource(Vector3D(0, 7, 15), Vector3D(15, 15, 15));
-
-	lightSourceList->push_back(l1);
-	lightSourceList->push_back(l2);
-	lightSourceList->push_back(l3);
-	lightSourceList->push_back(l4);
-
-	
-}
 
 void raytrace(Camera* &cam, Shader* &shader, Film* &film,
               std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
@@ -258,14 +181,20 @@ void renderFrame() {
 
 }
 
+void sceneMotionLogic() {
+	testPos += 0.1;
+}
+
 int main()
 {
 
 	std::cout << "****************** Frame Rendering Started******************" << std::endl;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		renderFrame();
+		sceneMotionLogic();
+
 	}
 
 	std::cout << "****************** Frame Rendering Finished******************" << std::endl;
