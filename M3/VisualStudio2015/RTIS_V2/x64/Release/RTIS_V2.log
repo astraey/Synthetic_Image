@@ -1,7 +1,7 @@
 ﻿  main.cpp
   Generating code
 c:\users\astray\synthetic_image\m3\src\shaders\directshader.cpp(135): warning C4715: 'DirectShader::computeColor': not all control paths return a value
-  31 of 410 functions ( 7.6%) were compiled, the rest were copied from previous compilation.
+  30 of 411 functions ( 7.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     6 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

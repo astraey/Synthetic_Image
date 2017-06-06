@@ -28,7 +28,7 @@ int frameCounter = 0;
 
 Vector3D mothPosition = Vector3D(-0.75, -0.75, 4.5);
 
-std::vector<Shape*>* &mothsList = new std::vector<Shape*>;
+std::vector<Shape*>* mothsList = new std::vector<Shape*>;
 
 void buildSceneCornellBox(Camera* &cam, Film* &film,
 	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
@@ -257,14 +257,14 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
 }
 
 void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
-	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
+	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList, std::vector<Shape*>* &mothList)
 {
 
 	mothPosition = Utils::moveForward(mothPosition);
 
 }
 
-void renderFrame() {
+void renderFrame(std::vector<Shape*>* &mothList) {
 
 
 
@@ -296,7 +296,7 @@ void renderFrame() {
 	// Launch some rays!
 	raytrace(cam, shader, film, objectsList, lightSourceList);
 
-	mothLogic(cam, shader, film, objectsList, lightSourceList);
+	mothLogic(cam, shader, film, objectsList, lightSourceList, mothList);
 
 	// Save the final result to file
 	//std::cout << "\n\nSaving the result to file output.bmp\n" << std::endl;
@@ -309,13 +309,15 @@ void renderFrame() {
 
 int main()
 {
+	std::vector<Shape*>* mothList = new std::vector<Shape*>;
+	
+
 
 	std::cout << "****************** Frame Rendering Started******************" << std::endl;
 
 	for (int i = 0; i < 20; i++)
 	{
-		renderFrame();
-
+		renderFrame(mothList);
 	}
 
 	std::cout << "****************** Frame Rendering Finished******************" << std::endl;
