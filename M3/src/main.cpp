@@ -21,6 +21,7 @@
 #include "shaders/globalshader.h"
 #include "materials/phong.h"
 #include "materials/mirror.h"
+#include "materials/lamp.h"
 #include "materials/transmissive.h"
 
 int frameCounter = 0;
@@ -104,6 +105,113 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 }
 
 
+
+void buildSceneSphere(Camera* &cam, Film* &film,
+	std::vector<Shape*>* &objectsList,
+	std::vector<PointLightSource>* &lightSourceList)
+{
+	/* **************************** */
+	/* Declare and place the camera */
+	/* **************************** */
+	// By default, this gives an ID transform
+	//  which means that the camera is located at (0, 0, 0)
+	//  and looking at the "+z" direction
+	Matrix4x4 cameraToWorld;
+	cameraToWorld.translate(Vector3D(0, 0, -30));
+	double fovDegrees = 60;
+	double fovRadians = Utils::degreesToRadians(fovDegrees);
+	cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
+
+	/* ************************** */
+	/* DEFINE YOUR MATERIALS HERE */
+	/* ************************** */
+	Material *green_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 80);
+	Material *red_50 = new Phong(Vector3D(0.7, 0.2, 0.2), Vector3D(0.6, 0.2, 0.2), 80);
+	Material *blue_50 = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0.2, 0.2, 0.6), 80);
+	Material *white_50 = new Phong(Vector3D(0.9, 0.9, 0.9), Vector3D(0.8, 0.8, 0.8), 80);
+
+	Material *lamp = new Lamp(1.1, Vector3D(1));
+
+
+
+	/* ******* */
+	/* Objects */
+	/* ******* */
+	// Create a heterogeneous list of objects of type shape
+	// (some might be triangles, other spheres, plans, etc)
+	objectsList = new std::vector<Shape*>;
+
+	// Define and place a sphere
+	Matrix4x4 sphereTransform1;
+	sphereTransform1 = sphereTransform1.translate(Vector3D(-1.0, -0.5, 2 * std::sqrt(2.0)));
+	Shape *s1 = new Sphere(0.25, sphereTransform1, blue_50);
+
+	// Define and place a sphere
+	Matrix4x4 sphereTransform2;
+	sphereTransform2 = sphereTransform2.translate(Vector3D(1.0, 0.0, 6));
+	Shape *s2 = new Sphere(1, sphereTransform2, green_50);
+
+	// Define and place a sphere
+	Matrix4x4 sphereTransform3;
+	sphereTransform3 = sphereTransform3.translate(Vector3D(0.3, -0.75, 3.5));
+	Shape *s3 = new Sphere(0.25, sphereTransform3, red_50);
+
+	Shape *ip = new InfinitePlane(Vector3D(0, -1.5, 0), Vector3D(0, 1, 0), white_50);
+	Shape *backPlan = new InfinitePlane(Vector3D(0, 0, 20), Vector3D(0, 0, -1), blue_50);
+
+	// Store the objects in the object list
+	objectsList->push_back(s1);
+	objectsList->push_back(s2);
+	objectsList->push_back(s3);
+	objectsList->push_back(ip);
+	objectsList->push_back(backPlan);
+
+
+	/* ****** */
+	/* Lights */
+	/* ****** */
+	//
+
+	lightSourceList = new std::vector<PointLightSource>;
+
+	//PointLightSource l1 = PointLightSource(Vector3D(-1, -1, -1), Vector3D(1, 1, 1));
+	//PointLightSource l2 = PointLightSource(Vector3D(-2, 0, 0), Vector3D(1, 1, 1));
+	//PointLightSource l3 = PointLightSource(Vector3D(-2, 0, 0), Vector3D(1, 1, 1));
+
+	PointLightSource l1 = PointLightSource(Vector3D(0.3, 1, 3.5), Vector3D(15, 15, 15));
+	Matrix4x4 sphereTransformL1;
+	sphereTransformL1 = sphereTransform1.translate(Vector3D(0.3, 1, 3.5));
+	Shape *sL1 = new Sphere(0.1, sphereTransformL1, lamp);
+
+	PointLightSource l2 = PointLightSource(Vector3D(3, 4, -1), Vector3D(15, 15, 15));
+	Matrix4x4 sphereTransformL2;
+	sphereTransformL2 = sphereTransform1.translate(Vector3D(3, 4, -1));
+	Shape *sL2 = new Sphere(0.1, sphereTransformL2, lamp);
+
+	PointLightSource l3 = PointLightSource(Vector3D(3, 3, 3), Vector3D(15, 15, 15));
+	Matrix4x4 sphereTransformL3;
+	sphereTransformL3 = sphereTransform1.translate(Vector3D(3, 3, 3));
+	Shape *sL3 = new Sphere(0.1, sphereTransformL3, lamp);
+
+	PointLightSource l4 = PointLightSource(Vector3D(0, 7, 15), Vector3D(15, 15, 15));
+	Matrix4x4 sphereTransformL4;
+	sphereTransformL4 = sphereTransform1.translate(Vector3D(0, 7, 15));
+	Shape *sL4 = new Sphere(0.1, sphereTransformL4, lamp);
+
+	lightSourceList->push_back(l1);
+	//lightSourceList->push_back(l2);
+	//lightSourceList->push_back(l3);
+	lightSourceList->push_back(l4);
+
+	objectsList->push_back(sL1);
+	//objectsList->push_back(sL2);
+	//objectsList->push_back(sL3);
+	objectsList->push_back(sL4);
+
+
+}
+
+
 void raytrace(Camera* &cam, Shader* &shader, Film* &film,
               std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
 {
@@ -167,8 +275,9 @@ void renderFrame() {
 	std::vector<PointLightSource> *lightSourceList;
 
 	// Build the scene
-	//buildSceneSphere(cam, film, objectsList, lightSourceList);
-	buildSceneCornellBox(cam, film, objectsList, lightSourceList);
+	buildSceneSphere(cam, film, objectsList, lightSourceList);
+	//buildSceneCornellBox(cam, film, objectsList, lightSourceList);
+
 
 	// Launch some rays!
 	raytrace(cam, shader, film, objectsList, lightSourceList);

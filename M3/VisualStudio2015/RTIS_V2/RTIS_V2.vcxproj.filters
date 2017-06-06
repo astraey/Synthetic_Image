@@ -34,8 +34,8 @@
     <Filter Include="src\shapes">
       <UniqueIdentifier>{471790e2-2b7b-4bb4-843a-8f2850c9ecfc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\sampler">
-      <UniqueIdentifier>{d7bc5816-8937-4226-a798-9d12cca4fe4a}</UniqueIdentifier>
+    <Filter Include="src\alDir">
+      <UniqueIdentifier>{b2c53c4e-7d1e-4014-bac8-5e8eb9ee2895}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,8 +120,11 @@
     <ClCompile Include="..\..\src\shaders\globalshader.cpp">
       <Filter>src\shaders</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sampler\hemisphericalsampler.cpp">
-      <Filter>src\sampler</Filter>
+    <ClCompile Include="..\..\src\materials\lamp.cpp">
+      <Filter>src\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\alDir\hemisphericalsampler.cpp">
+      <Filter>src\alDir</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,8 +206,11 @@
     <ClInclude Include="..\..\src\shaders\globalshader.h">
       <Filter>src\shaders</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\sampler\hemisphericalsampler.h">
-      <Filter>src\sampler</Filter>
+    <ClInclude Include="..\..\src\materials\lamp.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\alDir\hemisphericalsampler.h">
+      <Filter>src\alDir</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

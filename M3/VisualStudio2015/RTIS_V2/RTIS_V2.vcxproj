@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\alDir\hemisphericalsampler.cpp" />
     <ClCompile Include="..\..\src\cameras\camera.cpp" />
     <ClCompile Include="..\..\src\cameras\ortographic.cpp" />
     <ClCompile Include="..\..\src\cameras\perspective.cpp" />
@@ -156,11 +157,11 @@
     <ClCompile Include="..\..\src\core\vector3d.cpp" />
     <ClCompile Include="..\..\src\lightsources\pointlightsource.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\materials\lamp.cpp" />
     <ClCompile Include="..\..\src\materials\material.cpp" />
     <ClCompile Include="..\..\src\materials\mirror.cpp" />
     <ClCompile Include="..\..\src\materials\phong.cpp" />
     <ClCompile Include="..\..\src\materials\transmissive.cpp" />
-    <ClCompile Include="..\..\src\sampler\hemisphericalsampler.cpp" />
     <ClCompile Include="..\..\src\shaders\depthshader.cpp" />
     <ClCompile Include="..\..\src\shaders\directshader.cpp" />
     <ClCompile Include="..\..\src\shaders\globalshader.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="..\..\src\shapes\sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\alDir\hemisphericalsampler.h" />
     <ClInclude Include="..\..\src\cameras\camera.h" />
     <ClInclude Include="..\..\src\cameras\ortographic.h" />
     <ClInclude Include="..\..\src\cameras\perspective.h" />
@@ -185,11 +187,11 @@
     <ClInclude Include="..\..\src\core\utils.h" />
     <ClInclude Include="..\..\src\core\vector3d.h" />
     <ClInclude Include="..\..\src\lightsources\pointlightsource.h" />
+    <ClInclude Include="..\..\src\materials\lamp.h" />
     <ClInclude Include="..\..\src\materials\material.h" />
     <ClInclude Include="..\..\src\materials\mirror.h" />
     <ClInclude Include="..\..\src\materials\phong.h" />
     <ClInclude Include="..\..\src\materials\transmissive.h" />
-    <ClInclude Include="..\..\src\sampler\hemisphericalsampler.h" />
     <ClInclude Include="..\..\src\shaders\depthshader.h" />
     <ClInclude Include="..\..\src\shaders\directshader.h" />
     <ClInclude Include="..\..\src\shaders\globalshader.h" />

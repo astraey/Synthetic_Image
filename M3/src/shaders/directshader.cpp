@@ -1,8 +1,6 @@
 #include "directshader.h"
 #include "../core/utils.h"
 
-//DepthShader::DepthShader()
-//{}
 
 DirectShader::DirectShader(Vector3D color_, double maxDist_, Vector3D bgColor_) :
 	Shader(bgColor_)
@@ -30,8 +28,34 @@ Vector3D DirectShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 	if (Utils::getClosestIntersection(r, objList, its))
 	{
 
+		//LAMP
+		if (its.shape->getMaterial().hasDiffuseOrGlossy() && its.shape->getMaterial().hasTransmission()) {
+
+			Vector3D normal = its.normal;
+			double cosThetaI = dot(normal, wo);
+			double eta = its.shape->getMaterial().getIndexOfRefraction();
+			double cosThetaT_out;
+
+			if (cosThetaI < 0) {
+				eta = 1 / eta;
+				normal = -normal;
+				cosThetaI = dot(wo, normal);
+			}
+
+
+			if (!Utils::isTotalInternalReflection(eta, cosThetaI, cosThetaT_out))
+				wr = Utils::computeTransmissionDirection(r, normal, eta, cosThetaI, cosThetaT_out);
+
+			else
+				wr = Utils::computeReflectionDirection(r.d, normal);
+
+			Ray refRay = Ray(its.itsPoint, wr, r.depth + 1);
+			return computeColor(refRay, objList, lsList) + (1, 1, 1);
+
+		}
+
 		//PHONG
-		if (its.shape->getMaterial().hasDiffuseOrGlossy()) {
+		else if (its.shape->getMaterial().hasDiffuseOrGlossy()) {
 
 			for (int i = 0; i < nL; i++)
 			{
@@ -42,7 +66,11 @@ Vector3D DirectShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 				R = Ray(its.itsPoint, wi);
 				R.maxT = D.length();
 
-				if (!Utils::hasIntersection(R, objList))
+				Intersection its2;
+
+				Utils::getClosestIntersection(R, objList, its2);
+
+				if ((!Utils::hasIntersection(R, objList)) || its2.shape->getMaterial().hasTransmission())
 				{
 
 					if (dot(its.normal, wi) > 0)
@@ -75,7 +103,7 @@ Vector3D DirectShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 
 		//TRANSMISSIVE
 		else if (its.shape->getMaterial().hasTransmission()) {
-			
+
 			Vector3D normal = its.normal;
 			double cosThetaI = dot(normal, wo);
 			double eta = its.shape->getMaterial().getIndexOfRefraction();
