@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <stdlib.h> /* srand, rand */
 #include <vector>
@@ -9,6 +10,7 @@
 #include "core/utils.h"
 
 #include "shapes/sphere.h"
+#include "shapes/moth.h"
 #include "shapes/infiniteplane.h"
 
 #include "cameras/ortographic.h"
@@ -28,89 +30,12 @@ int frameCounter = 0;
 
 Vector3D mothPosition = Vector3D(-0.75, -0.75, 4.5);
 
-std::vector<Shape*>* mothsList = new std::vector<Shape*>;
-
-void buildSceneCornellBox(Camera* &cam, Film* &film,
-	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
-{
-	/* **************************** */
-	/* Declare and place the camera */
-	/* **************************** */
-	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(0, 0, -3));
-	double fovDegrees = 60;
-	double fovRadians = Utils::degreesToRadians(fovDegrees);
-	cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
-
-	/* ********* */
-	/* Materials */
-	/* ********* */
-	Material *redDiffuse = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0, 0, 0), 100);
-	Material *greenDiffuse = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0, 0, 0), 100);
-	Material *greyDiffuse = new Phong(Vector3D(0.8, 0.8, 0.8), Vector3D(0, 0, 0), 100);
-	Material *blueDiffuse = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0, 0, 0), 100);
-	
-	Material *mirror = new Mirror(Vector3D(1, 0.9, 0.85));
-	//Material *transmissive = new Phong(Vector3D(1, 1, 0.2), Vector3D(1, 1, 0.2), 20);
-	Material *transmissive = new Transmissive(1.1, Vector3D(1));
-	//Material *transmissive = new Transmissive(Vector3D(1, 0.9, 0.85));
-
-	Material *red_100 = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0.7, 0.7, 0.2), 100);
-
-	/* ******* */
-	/* Objects */
-	/* ******* */
-	objectsList = new std::vector<Shape*>;
-	double offset = 3.0;
-	Matrix4x4 idTransform;
-	// Construct the Cornell Box
-	Shape *leftPlan = new InfinitePlane(Vector3D(-offset, 0, 0), Vector3D(1, 0, 0), redDiffuse);
-	Shape *rightPlan = new InfinitePlane(Vector3D(offset, 0, 0), Vector3D(-1, 0, 0), greenDiffuse);
-	Shape *topPlan = new InfinitePlane(Vector3D(0, offset, 0), Vector3D(0, -1, 0), greyDiffuse);
-	Shape *bottomPlan = new InfinitePlane(Vector3D(0, -offset, 0), Vector3D(0, 1, 0), greyDiffuse);
-	Shape *backPlan = new InfinitePlane(Vector3D(0, 0, 3 * offset), Vector3D(0, 0, -1), blueDiffuse);
-	objectsList->push_back(leftPlan);
-	objectsList->push_back(rightPlan);
-	objectsList->push_back(topPlan);
-	objectsList->push_back(bottomPlan);
-	objectsList->push_back(backPlan);
-
-	// Place the Spheres inside the Cornell Box
-	Matrix4x4 sphereTransform1;
-	double radius = 1;
-	sphereTransform1 = Matrix4x4::translate(Vector3D(-offset + radius, -offset + radius, 1));
-	Shape *s1 = new Sphere(1.5, sphereTransform1, mirror);
-	Matrix4x4 sphereTransform2;
-	sphereTransform2 = Matrix4x4::translate(Vector3D(1.0, 0.0, 2));
-	Shape *s2 = new Sphere(1, sphereTransform2, transmissive);
-	Matrix4x4 sphereTransform3;
-	radius = 1;
-	sphereTransform3 = Matrix4x4::translate(Vector3D(0.3, -offset + radius, 5));
-	Shape *s3 = new Sphere(radius, sphereTransform3, red_100);
-	objectsList->push_back(s1);
-	objectsList->push_back(s2);
-	objectsList->push_back(s3);
-
-	/* ****** */
-	/* Lights */
-	/* ****** */
-	lightSourceList = new std::vector<PointLightSource>;
-	Vector3D lightPosition1 = Vector3D(0, offset - 1, 2 * offset);
-	Vector3D lightPosition2 = Vector3D(0, offset - 1, 0);
-	Vector3D lightPosition3 = Vector3D(0, offset - 1, offset);
-	Vector3D intensity = Vector3D(7, 7, 7); // Radiant intensity (watts/sr)
-	PointLightSource pointLS1(lightPosition1, intensity);
-	PointLightSource pointLS2(lightPosition2, intensity);
-	PointLightSource pointLS3(lightPosition3, intensity);
-	lightSourceList->push_back(pointLS1);
-	lightSourceList->push_back(pointLS2);
-	lightSourceList->push_back(pointLS3);
-}
-
-
+//std::vector<Moth*>* mothsList = new std::vector<Moth*>;
 
 void buildSceneSphere(Camera* &cam, Film* &film,
 	std::vector<Shape*>* &objectsList,
-	std::vector<PointLightSource>* &lightSourceList)
+	std::vector<PointLightSource>* &lightSourceList,
+	std::vector<Moth*> &mothList)
 {
 	/* **************************** */
 	/* Declare and place the camera */
@@ -131,6 +56,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	Material *red_50 = new Phong(Vector3D(0.7, 0.2, 0.2), Vector3D(0.6, 0.2, 0.2), 80);
 	Material *blue_50 = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0.2, 0.2, 0.6), 80);
 	Material *white_50 = new Phong(Vector3D(0.9, 0.9, 0.9), Vector3D(0.8, 0.8, 0.8), 80);
+
 	Material *moth_50 = new Phong(Vector3D(0.9, 0.9, 0), Vector3D(0.8, 0.8, 0), 80);
 
 	Material *lamp = new Lamp(1.1, Vector3D(1));
@@ -162,18 +88,24 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	// Define and place a MOTH
 	Matrix4x4 sphereTransform4;
 	sphereTransform4 = sphereTransform4.translate(mothPosition);
-	Shape *s4 = new Sphere(0.25, sphereTransform4, moth_50);
+	
+	 Moth *moth = new Moth(0.25, sphereTransform4, moth_50);
+	
+	
 
 	Shape *ip = new InfinitePlane(Vector3D(0, -1.5, 0), Vector3D(0, 1, 0), white_50);
-	Shape *backPlan = new InfinitePlane(Vector3D(0, 0, 20), Vector3D(0, 0, -1), blue_50);
+	Shape *backPlane = new InfinitePlane(Vector3D(0, 0, 20), Vector3D(0, 0, -1), blue_50);
 
 	// Store the objects in the object list
-	objectsList->push_back(s1);
-	objectsList->push_back(s2);
-	objectsList->push_back(s3);
-	objectsList->push_back(s4);
+	//objectsList->push_back(s1);
+	//objectsList->push_back(s2);
+	//objectsList->push_back(s3);
+
+	mothList.push_back(moth);
+
+	objectsList->push_back(moth);
 	objectsList->push_back(ip);
-	objectsList->push_back(backPlan);
+	objectsList->push_back(backPlane);
 
 
 	/* ****** */
@@ -222,49 +154,111 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 
 
 void raytrace(Camera* &cam, Shader* &shader, Film* &film,
-              std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
+	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
 {
-    unsigned int sizeBar = 40;
+	unsigned int sizeBar = 40;
 
-    size_t resX = film->getWidth();
-    size_t resY = film->getHeight();
+	size_t resX = film->getWidth();
+	size_t resY = film->getHeight();
 
-    // Main raytracing loop
-    // Out-most loop invariant: we have rendered lin lines
-    for(size_t lin=0; lin<resY; lin++)
-    {
-        // Show progression
-        if ( lin%(resY/sizeBar) == 0)
-            std::cout << ".";
+	// Main raytracing loop
+	// Out-most loop invariant: we have rendered lin lines
+	for (size_t lin = 0; lin<resY; lin++)
+	{
+		// Show progression
+		if (lin % (resY / sizeBar) == 0)
+			std::cout << ".";
 
-        // Inner loop invariant: we have rendered col columns
-        for(size_t col=0; col<resX; col++)
-        {
-            // Compute the pixel position in NDC
-            double x = (double)(col + 0.5) / resX;
-            double y = (double)(lin + 0.5) / resY;
+		// Inner loop invariant: we have rendered col columns
+		for (size_t col = 0; col<resX; col++)
+		{
+			// Compute the pixel position in NDC
+			double x = (double)(col + 0.5) / resX;
+			double y = (double)(lin + 0.5) / resY;
 
-            // Generate the camera ray
-            Ray cameraRay = cam->generateRay(x, y);
+			// Generate the camera ray
+			Ray cameraRay = cam->generateRay(x, y);
 
-            // Compute ray color according to the used shader
-            Vector3D pixelColor = shader->computeColor( cameraRay, *objectsList, *lightSourceList );
+			// Compute ray color according to the used shader
+			Vector3D pixelColor = shader->computeColor(cameraRay, *objectsList, *lightSourceList);
 
-            // Store the pixel color
-            film->setPixelValue(col, lin, pixelColor);
-        }
-    }
+			// Store the pixel color
+			film->setPixelValue(col, lin, pixelColor);
+		}
+	}
 }
 
 void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
-	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList, std::vector<Shape*>* &mothList)
+	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList, std::vector<Moth*> &mothList)
 {
 
-	mothPosition = Utils::moveForward(mothPosition);
+	Moth* m = mothList[0];
+	int r = m->getRadius();
+	Matrix4x4 MPosition;
+	Vector3D dir;
+
+	std::vector<Vector3D> pointList;
+
+	pointList.push_back(Vector3D(0, r, 0));
+	pointList.push_back(Vector3D(0, -r, 0));
+	pointList.push_back(Vector3D(r, 0, 0));
+	pointList.push_back(Vector3D(-r, 0, 0));
+	pointList.push_back(Vector3D(0, 0, r));
+	pointList.push_back(Vector3D(0, 0, -r));
+
+	int directionPoint = m->mothDirection(pointList, *objectsList, *lightSourceList);
+
+	std::cout << directionPoint << std::endl;
+
+	switch (directionPoint)
+	{
+	case 0:
+		MPosition = m->getPosition();
+		dir = Utils::moveUp(mothPosition);
+		MPosition = MPosition + Matrix4x4::translate(dir);
+		m->setPosition(MPosition);
+		break;
+
+	case 1:
+		MPosition = m->getPosition();
+		dir = Utils::moveDown(mothPosition);
+		MPosition = MPosition + Matrix4x4::translate(dir);
+		m->setPosition(MPosition);
+		break;
+
+	case 2:
+		MPosition = m->getPosition();
+		dir = Utils::moveRight(mothPosition);
+		MPosition = MPosition + Matrix4x4::translate(dir);
+		m->setPosition(MPosition);
+		break;
+
+	case 3:
+		MPosition = m->getPosition();
+		dir = Utils::moveLeft(mothPosition);
+		MPosition = MPosition + Matrix4x4::translate(dir);
+		m->setPosition(MPosition); mothPosition = Utils::moveLeft(mothPosition);
+		break;
+
+	case 4:
+		MPosition = m->getPosition();
+		dir = Utils::moveForward(mothPosition);
+		MPosition = MPosition + Matrix4x4::translate(dir);
+		m->setPosition(MPosition);
+		break;
+
+	case 5:
+		MPosition = m->getPosition();
+		dir = Utils::moveBackwards(mothPosition);
+		MPosition = MPosition + Matrix4x4::translate(dir);
+		m->setPosition(MPosition);
+		break;
+
+	}
 
 }
 
-void renderFrame(std::vector<Shape*>* &mothList) {
+void renderFrame(std::vector<Moth*> &mothList) {
 
 
 
@@ -289,7 +283,7 @@ void renderFrame(std::vector<Shape*>* &mothList) {
 	std::vector<PointLightSource> *lightSourceList;
 
 	// Build the scene
-	buildSceneSphere(cam, film, objectsList, lightSourceList);
+	buildSceneSphere(cam, film, objectsList, lightSourceList, mothList);
 	//buildSceneCornellBox(cam, film, objectsList, lightSourceList);
 
 
@@ -309,8 +303,8 @@ void renderFrame(std::vector<Shape*>* &mothList) {
 
 int main()
 {
-	std::vector<Shape*>* mothList = new std::vector<Shape*>;
-	
+	std::vector<Moth*> mothList;// = new std::vector<Moth*>;
+
 
 
 	std::cout << "****************** Frame Rendering Started******************" << std::endl;
