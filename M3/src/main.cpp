@@ -26,9 +26,9 @@
 
 int frameCounter = 0;
 
-double testPos = 4;
-
 Vector3D mothPosition = Vector3D(-0.75, -0.75, 4.5);
+
+std::vector<Shape*>* &mothsList = new std::vector<Shape*>;
 
 void buildSceneCornellBox(Camera* &cam, Film* &film,
 	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
@@ -77,7 +77,7 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	// Place the Spheres inside the Cornell Box
 	Matrix4x4 sphereTransform1;
 	double radius = 1;
-	sphereTransform1 = Matrix4x4::translate(Vector3D(-offset + radius, -offset + radius, testPos));
+	sphereTransform1 = Matrix4x4::translate(Vector3D(-offset + radius, -offset + radius, 1));
 	Shape *s1 = new Sphere(1.5, sphereTransform1, mirror);
 	Matrix4x4 sphereTransform2;
 	sphereTransform2 = Matrix4x4::translate(Vector3D(1.0, 0.0, 2));
@@ -260,7 +260,7 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
 {
 
-	//mothPosition = Utils::moveForward(mothPosition);
+	mothPosition = Utils::moveForward(mothPosition);
 
 }
 
@@ -306,9 +306,6 @@ void renderFrame() {
 
 }
 
-void sceneMotionLogic() {
-	testPos += 0.1;
-}
 
 int main()
 {
@@ -318,7 +315,6 @@ int main()
 	for (int i = 0; i < 20; i++)
 	{
 		renderFrame();
-		sceneMotionLogic();
 
 	}
 
