@@ -1,5 +1,7 @@
 #include "utils.h"
 
+double step = 0.5;
+
 Utils::Utils()
 { }
 
@@ -123,3 +125,34 @@ double Utils::computeReflectanceCoefficient(const double &eta, const double &cos
 {
     return 0.0;
 }
+
+Vector3D Utils::moveUp(Vector3D pos)
+{
+	return Vector3D(pos.x, pos.y + step, pos.z);
+}
+
+Vector3D Utils::moveDown(Vector3D pos)
+{
+	return Vector3D(pos.x, pos.y - step, pos.z);
+}
+
+Vector3D Utils::moveLeft(Vector3D pos)
+{
+	return Vector3D(pos.x - step, pos.y, pos.z);
+}
+
+Vector3D Utils::moveRight(Vector3D pos)
+{
+	return Vector3D(pos.x + step, pos.y, pos.z);
+}
+
+Vector3D Utils::moveForward(Vector3D pos)
+{
+	return Vector3D(pos.x, pos.y, pos.z + step);
+}
+
+Vector3D Utils::moveBackwards(Vector3D pos)
+{
+	return Vector3D(pos.x, pos.y, pos.z - step);
+}
+

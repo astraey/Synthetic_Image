@@ -28,6 +28,8 @@ int frameCounter = 0;
 
 double testPos = 4;
 
+Vector3D mothPosition = Vector3D(-0.75, -0.75, 4.5);
+
 void buildSceneCornellBox(Camera* &cam, Film* &film,
 	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
 {
@@ -129,6 +131,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	Material *red_50 = new Phong(Vector3D(0.7, 0.2, 0.2), Vector3D(0.6, 0.2, 0.2), 80);
 	Material *blue_50 = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0.2, 0.2, 0.6), 80);
 	Material *white_50 = new Phong(Vector3D(0.9, 0.9, 0.9), Vector3D(0.8, 0.8, 0.8), 80);
+	Material *moth_50 = new Phong(Vector3D(0.9, 0.9, 0), Vector3D(0.8, 0.8, 0), 80);
 
 	Material *lamp = new Lamp(1.1, Vector3D(1));
 
@@ -156,6 +159,11 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	sphereTransform3 = sphereTransform3.translate(Vector3D(0.3, -0.75, 3.5));
 	Shape *s3 = new Sphere(0.25, sphereTransform3, red_50);
 
+	// Define and place a MOTH
+	Matrix4x4 sphereTransform4;
+	sphereTransform4 = sphereTransform4.translate(mothPosition);
+	Shape *s4 = new Sphere(0.25, sphereTransform4, moth_50);
+
 	Shape *ip = new InfinitePlane(Vector3D(0, -1.5, 0), Vector3D(0, 1, 0), white_50);
 	Shape *backPlan = new InfinitePlane(Vector3D(0, 0, 20), Vector3D(0, 0, -1), blue_50);
 
@@ -163,6 +171,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	objectsList->push_back(s1);
 	objectsList->push_back(s2);
 	objectsList->push_back(s3);
+	objectsList->push_back(s4);
 	objectsList->push_back(ip);
 	objectsList->push_back(backPlan);
 
@@ -247,12 +256,17 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
     }
 }
 
+void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
+	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
+{
+
+	//mothPosition = Utils::moveForward(mothPosition);
+
+}
+
 void renderFrame() {
 
 
-	//std::string separator = "\n----------------------------------------------\n";
-	//std::string separatorStar = "\n**********************************************\n";
-	//std::cout << separator << "RTIS - Ray Tracer for \"Imatge Sintetica\"" << separator << std::endl;
 
 	// Create an empty film
 	Film *film;
@@ -281,6 +295,8 @@ void renderFrame() {
 
 	// Launch some rays!
 	raytrace(cam, shader, film, objectsList, lightSourceList);
+
+	mothLogic(cam, shader, film, objectsList, lightSourceList);
 
 	// Save the final result to file
 	//std::cout << "\n\nSaving the result to file output.bmp\n" << std::endl;

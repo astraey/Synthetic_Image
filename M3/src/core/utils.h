@@ -34,6 +34,14 @@ public:
 
     static double computeReflectanceCoefficient(const double &eta, const double &cosThetaI,
                                                 const double &cosThetaT);
+
+	static Vector3D moveUp(Vector3D pos);
+	static Vector3D moveDown(Vector3D pos);
+	static Vector3D moveLeft(Vector3D pos);
+	static Vector3D moveRight(Vector3D pos);
+	static Vector3D moveForward(Vector3D pos);
+	static Vector3D moveBackwards(Vector3D pos);
+
 };
 
 #endif // UTILS_H
