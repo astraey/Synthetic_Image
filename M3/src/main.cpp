@@ -139,7 +139,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	Shape *sL4 = new Sphere(0.1, sphereTransformL4, lamp);
 
 	lightSourceList->push_back(l1);
-	//lightSourceList->push_back(l2);
+	lightSourceList->push_back(l2);
 	//lightSourceList->push_back(l3);
 	//lightSourceList->push_back(l4);
 
@@ -193,18 +193,18 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 	
 
 	Moth* m = mothList[0];
-	int r = m->getRadius();
+	double r = m->getRadius();
 	Matrix4x4 MPosition;
 	Vector3D dir;
 
 	std::vector<Vector3D> pointList;
 
-	pointList.push_back(Vector3D(0, r, 0));
-	pointList.push_back(Vector3D(0, -r, 0));
-	pointList.push_back(Vector3D(r, 0, 0));
-	pointList.push_back(Vector3D(-r, 0, 0));
-	pointList.push_back(Vector3D(0, 0, r));
-	pointList.push_back(Vector3D(0, 0, -r));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y + r, mothPosition.z));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y -r, mothPosition.z));
+	pointList.push_back(Vector3D(r + mothPosition.x, mothPosition.y, mothPosition.z));
+	pointList.push_back(Vector3D(mothPosition.x  -r, mothPosition.y, mothPosition.z));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z + r));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z -r));
 
 	int directionPoint = m->mothDirection(pointList, *objectsList, *lightSourceList);
 

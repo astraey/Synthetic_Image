@@ -6,7 +6,7 @@ Moth::Moth(const double radius_, const Matrix4x4 &t_, Material *material_)
 	: Shape(t_, material_), radius(radius_), position(t_)
 { }
 
-int Moth::getRadius() const
+double Moth::getRadius() const
 {
 	return radius;
 }
@@ -177,18 +177,41 @@ bool Moth::rayIntersectP(const Ray &ray) const
 int Moth::mothDirection(const std::vector<Vector3D> &pointList, const std::vector<Shape*> &objList,
 	const std::vector<PointLightSource> &lsList) const
 {
+	/*
+	std::cout << "Point List SIZE**** :" << pointList.size() << std::endl;
+	std::cout << "**" << pointList[0] << std::endl;
+	std::cout << "**" << pointList[1] << std::endl;
+	std::cout << "**" << pointList[2] << std::endl;
+	std::cout << "**" << pointList[3] << std::endl;
+	std::cout << "**" << pointList[4] << std::endl;
+	std::cout << "**" << pointList[5] << std::endl;
+	*/
+
 
 	int nL = lsList.size();
+
+	//std::cout << "Light List Size :" << lsList.size() << std::endl;
+	//std::cout << "PointList :" << pointList.size() << std::endl;
+
 	Ray R;
 	Vector3D wi;
 	
 	std::vector<Vector3D> Illumination;
 
+
+
 	for (int np = 0; np < pointList.size(); np++)
 	{
 
 		Vector3D P = pointList[np];
+		//std::cout << "P :" << pointList[np] << std::endl;
+
+
 		Vector3D wo = -this->getNormalWorld(P).normalized();
+
+		//std::cout << "P :" << P << std::endl;
+		//std::cout << "wo :" << wo << std::endl;
+
 
 		for (int i = 0; i < nL; i++)
 		{
@@ -203,37 +226,64 @@ int Moth::mothDirection(const std::vector<Vector3D> &pointList, const std::vecto
 
 			Utils::getClosestIntersection(R, objList, its2);
 
-			if ((!Utils::hasIntersection(R, objList)) || its2.shape->getMaterial().hasTransmission())
+			if ((Utils::hasIntersection(R, objList)) || its2.shape->getMaterial().hasTransmission())
 			{
+				//std::cout << "WWEEEEE ENTEREE HEREEE" << std::endl;
 
-				if (dot(this->getNormalWorld(P), wi) > 0)
-				{
 
+
+
+					//std::cout << "WWEEEEE ENTEREE HEREEE" << std::endl;
 
 					Vector3D I = lsList[i].getIntensity(P);
 
-					Vector3D R = this->getMaterial().getReflectance(this->getNormalWorld(P), wo, wi);
+					//std::cout <<"Intensity: "<< I << std::endl;
 
-					Illumination[np] = Utils::multiplyPerCanal(I, R);
+					//Vector3D R = this->getMaterial().getReflectance(this->getNormalWorld(P), wo, wi);
 
 
-				}
+					//Illumination[np] = Utils::multiplyPerCanal(I, R);
+					//Illumination.push_back(Utils::multiplyPerCanal(I, R));
+					Illumination.push_back(I);
+
+
+				
 			}
 		}
 	}
 
-	int max = Illumination[0].x + Illumination[0].y + Illumination[0].z;
+	/*
+	std::cout << "Ilumination SIZE**** :" << Illumination.size() << std::endl;
+	std::cout << "**" << Illumination[0] << std::endl;
+	std::cout << "**" << Illumination[1] << std::endl;
+	std::cout << "**" << Illumination[2] << std::endl;
+	std::cout << "**" << Illumination[3] << std::endl;
+	std::cout << "**" << Illumination[4] << std::endl;
+	std::cout << "**" << Illumination[5] << std::endl;
+	*/
+
+
+	double max = Illumination[0].x + Illumination[0].y + Illumination[0].z;
+
+
 	int maxpos = 0;
+
 
 	for (int j = 0; j < Illumination.size(); j++)
 	{
 
-		int compare = Illumination[j].x + Illumination[j].y + Illumination[j].z;
+		double compare = Illumination[j].x + Illumination[j].y + Illumination[j].z;
 
-			if (max < compare)
+
+		//std::cout << "ENTERED HERE" << compare << std::endl;
+
+
+			if (max <= compare)
 			{
+				//std::cout << "ENTERED HERE in iteration " << j << " MAX: " << max << "Compare: " << compare << std::endl;
 				max = compare;
 				maxpos = j;
+
 			}
 	}
 

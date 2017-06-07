@@ -17,7 +17,7 @@ public:
     Moth() = delete;
     Moth(const double radius_, const Matrix4x4 &t, Material *material_);
 
-	int getRadius() const;
+	double getRadius() const;
 	Matrix4x4 getPosition() const;
 
 	void setPosition(Matrix4x4 position);
