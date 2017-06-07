@@ -1,6 +1,7 @@
 #include "utils.h"
 
 double step = 0.03;
+double stepLight = 0.05;
 
 Utils::Utils()
 { }
@@ -156,3 +157,32 @@ Vector3D Utils::moveBackwards(Vector3D pos)
 	return Vector3D(pos.x, pos.y, pos.z - step);
 }
 
+Vector3D Utils::moveUpLight(Vector3D pos)
+{
+	return Vector3D(pos.x, pos.y + stepLight, pos.z);
+}
+
+Vector3D Utils::moveDownLight(Vector3D pos)
+{
+	return Vector3D(pos.x, pos.y - stepLight, pos.z);
+}
+
+Vector3D Utils::moveLeftLight(Vector3D pos)
+{
+	return Vector3D(pos.x - stepLight, pos.y, pos.z);
+}
+
+Vector3D Utils::moveRightLight(Vector3D pos)
+{
+	return Vector3D(pos.x + stepLight, pos.y, pos.z);
+}
+
+Vector3D Utils::moveForwardLight(Vector3D pos)
+{
+	return Vector3D(pos.x, pos.y, pos.z + stepLight);
+}
+
+Vector3D Utils::moveBackwardsLight(Vector3D pos)
+{
+	return Vector3D(pos.x, pos.y, pos.z - stepLight);
+}

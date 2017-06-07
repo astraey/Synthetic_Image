@@ -28,7 +28,9 @@
 
 int frameCounter = 0;
 
-Vector3D mothPosition = Vector3D(-0.75, -0.75, 4.5);
+Vector3D mothPosition1 = Vector3D(-0.75, -0.75, 4.5);
+
+Vector3D mothPosition2 = Vector3D(0.75, 0.5, 3);
 
 Vector3D lampPosition1 = Vector3D(0.3, 1.5, 3.5);
 bool lampDirection1 = true;
@@ -93,10 +95,14 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	sphereTransform3 = sphereTransform3.translate(Vector3D(0.3, -0.75, 3.5));
 	Shape *s3 = new Sphere(0.25, sphereTransform3, red_50);
 
-	// Define and place a MOTH
+	// Define and place Moths
 	Matrix4x4 sphereTransform4;
-	sphereTransform4 = sphereTransform4.translate(mothPosition);
-	Moth *moth = new Moth(0.1, sphereTransform4, moth_50);
+	sphereTransform4 = sphereTransform4.translate(mothPosition1);
+	Moth *moth1 = new Moth(0.1, sphereTransform4, moth_50);
+
+	Matrix4x4 sphereTransform5;
+	sphereTransform5 = sphereTransform5.translate(mothPosition2);
+	Moth *moth2 = new Moth(0.1, sphereTransform5, moth_50);
 	
 	
 
@@ -108,9 +114,11 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	//objectsList->push_back(s2);
 	//objectsList->push_back(s3);
 
-	mothList.push_back(moth);
+	mothList.push_back(moth1);
+	mothList.push_back(moth2);
 
-	objectsList->push_back(moth);
+	objectsList->push_back(moth1);
+	objectsList->push_back(moth2);
 	objectsList->push_back(ip);
 	objectsList->push_back(backPlane);
 
@@ -123,17 +131,17 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	lightSourceList = new std::vector<PointLightSource>;
 
 
-	//Light Point Declaration
-	PointLightSource l1 = PointLightSource(lampPosition1, Vector3D(5, 5, 5));
+	//Light Point Declaration where intensity depends on position
+	PointLightSource l1 = PointLightSource(lampPosition1, Vector3D(abs(lampPosition2.z), abs(lampPosition2.z), abs(lampPosition2.z)));
 	Matrix4x4 sphereTransformL1;
 
 	//Lamp Shape Declaration
 	sphereTransformL1 = sphereTransform1.translate(lampPosition1);
 	Shape *sL1 = new Sphere(0.1, sphereTransformL1, lamp);
 
-	//Light Point Declaration
-	PointLightSource l2 = PointLightSource(lampPosition2, Vector3D(5, 5, 5));
-	Matrix4x4 sphereTransformL2;
+	//Light Point Declaration where intensity depends on position
+	PointLightSource l2 = PointLightSource(lampPosition2, Vector3D(abs(lampPosition1.x), abs(lampPosition1.x), abs(lampPosition1.x)));
+	Matrix4x4 sphereTransformL2; 
 
 	//Lamp Shape Declaration
 	sphereTransformL2 = sphereTransform1.translate(lampPosition2);
@@ -203,72 +211,141 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 {
 	
 
-	Moth* m = mothList[0];
-	double r = m->getRadius();
-	Matrix4x4 MPosition;
-	Vector3D dir;
+	Moth* m1 = mothList[0];
+	Moth* m2 = mothList[1];
+	double r1 = m1->getRadius();
+	double r2 = m2->getRadius();
+	Matrix4x4 M1Position;
+	Matrix4x4 M2Position;
+	Vector3D dir1;
+	Vector3D dir2;
 
-	std::vector<Vector3D> pointList;
+	std::vector<Vector3D> pointList1;
+	std::vector<Vector3D> pointList2;
 
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y + r, mothPosition.z));
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y -r, mothPosition.z));
-	pointList.push_back(Vector3D(r + mothPosition.x, mothPosition.y, mothPosition.z));
-	pointList.push_back(Vector3D(mothPosition.x  -r, mothPosition.y, mothPosition.z));
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z + r));
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z -r));
+	pointList1.push_back(Vector3D(mothPosition1.x, mothPosition1.y + r1, mothPosition1.z));
+	pointList1.push_back(Vector3D(mothPosition1.x, mothPosition1.y -r1, mothPosition1.z));
+	pointList1.push_back(Vector3D(r1 + mothPosition1.x, mothPosition1.y, mothPosition1.z));
+	pointList1.push_back(Vector3D(mothPosition1.x  -r1, mothPosition1.y, mothPosition1.z));
+	pointList1.push_back(Vector3D(mothPosition1.x, mothPosition1.y, mothPosition1.z + r1));
+	pointList1.push_back(Vector3D(mothPosition1.x, mothPosition1.y, mothPosition1.z -r1));
 
-	int directionPoint = m->mothDirection(pointList, *objectsList, *lightSourceList);
 
-	//std::cout << directionPoint << std::endl;
+	pointList2.push_back(Vector3D(mothPosition2.x, mothPosition2.y + r2, mothPosition2.z));
+	pointList2.push_back(Vector3D(mothPosition2.x, mothPosition2.y - r2, mothPosition2.z));
+	pointList2.push_back(Vector3D(r2 + mothPosition2.x, mothPosition2.y, mothPosition2.z));
+	pointList2.push_back(Vector3D(mothPosition2.x - r2, mothPosition2.y, mothPosition2.z));
+	pointList2.push_back(Vector3D(mothPosition2.x, mothPosition2.y, mothPosition2.z + r2));
+	pointList2.push_back(Vector3D(mothPosition2.x, mothPosition2.y, mothPosition2.z - r2));
 
-	switch (directionPoint)
+	int directionPoint1 = m1->mothDirection(pointList1, *objectsList, *lightSourceList);
+	int directionPoint2 = m2->mothDirection(pointList2, *objectsList, *lightSourceList);
+
+	//std::cout << directionPoint1 << "-"<< directionPoint2 << std::endl;
+
+	switch (directionPoint1)
 	{
 	case 0:
-		MPosition = m->getPosition();
-		dir = Utils::moveUp(mothPosition);
-		mothPosition = dir;
-		MPosition = MPosition + Matrix4x4::translate(dir);
-		m->setPosition(MPosition);
+		M1Position = m1->getPosition();
+		dir1 = Utils::moveUp(mothPosition1);
+		mothPosition1 = dir1;
+		M1Position = M1Position + Matrix4x4::translate(dir1);
+		m1->setPosition(M1Position);
 		break;
 
 	case 1:
-		MPosition = m->getPosition();
-		dir = Utils::moveDown(mothPosition);
-		mothPosition = dir;
-		MPosition = MPosition + Matrix4x4::translate(dir);
-		m->setPosition(MPosition);
+		M1Position = m1->getPosition();
+		dir1 = Utils::moveDown(mothPosition1);
+		mothPosition1 = dir1;
+		M1Position = M1Position + Matrix4x4::translate(dir1);
+		m1->setPosition(M1Position);
 		break;
 
 	case 2:
-		MPosition = m->getPosition();
-		dir = Utils::moveRight(mothPosition);
-		mothPosition = dir;
-		MPosition = MPosition + Matrix4x4::translate(dir);
-		m->setPosition(MPosition);
+		M1Position = m1->getPosition();
+		dir1 = Utils::moveRight(mothPosition1);
+		mothPosition1 = dir1;
+		M1Position = M1Position + Matrix4x4::translate(dir1);
+		m1->setPosition(M1Position);
 		break;
 
 	case 3:
-		MPosition = m->getPosition();
-		dir = Utils::moveLeft(mothPosition);
-		mothPosition = dir;
-		MPosition = MPosition + Matrix4x4::translate(dir);
-		m->setPosition(MPosition); mothPosition = Utils::moveLeft(mothPosition);
+		M1Position = m1->getPosition();
+		dir1 = Utils::moveLeft(mothPosition1);
+		mothPosition1 = dir1;
+		M1Position = M1Position + Matrix4x4::translate(dir1);
+		m1->setPosition(M1Position); mothPosition1 = Utils::moveLeft(mothPosition1);
 		break;
 
 	case 4:
-		MPosition = m->getPosition();
-		dir = Utils::moveForward(mothPosition);
-		mothPosition = dir;
-		MPosition = MPosition + Matrix4x4::translate(dir);
-		m->setPosition(MPosition);
+		M1Position = m1->getPosition();
+		dir1 = Utils::moveForward(mothPosition1);
+		mothPosition1 = dir1;
+		M1Position = M1Position + Matrix4x4::translate(dir1);
+		m1->setPosition(M1Position);
 		break;
 
 	case 5:
-		MPosition = m->getPosition();
-		dir = Utils::moveBackwards(mothPosition);
-		mothPosition = dir;
-		MPosition = MPosition + Matrix4x4::translate(dir);
-		m->setPosition(MPosition);
+		M1Position = m1->getPosition();
+		dir1 = Utils::moveBackwards(mothPosition1);
+		mothPosition1 = dir1;
+		M1Position = M1Position + Matrix4x4::translate(dir1);
+		m1->setPosition(M1Position);
+		break;
+
+	}
+
+
+
+
+	switch (directionPoint2)
+	{
+	case 0:
+		M2Position = m2->getPosition();
+		dir2 = Utils::moveUp(mothPosition2);
+		mothPosition2 = dir2;
+		M2Position = M2Position + Matrix4x4::translate(dir2);
+		m2->setPosition(M2Position);
+		break;
+
+	case 1:
+		M2Position = m2->getPosition();
+		dir2 = Utils::moveDown(mothPosition2);
+		mothPosition2 = dir2;
+		M2Position = M2Position + Matrix4x4::translate(dir2);
+		m2->setPosition(M2Position);
+		break;
+
+	case 2:
+		M2Position = m2->getPosition();
+		dir2 = Utils::moveRight(mothPosition2);
+		mothPosition2 = dir2;
+		M2Position = M2Position + Matrix4x4::translate(dir2);
+		m2->setPosition(M2Position);
+		break;
+
+	case 3:
+		M2Position = m2->getPosition();
+		dir2 = Utils::moveLeft(mothPosition2);
+		mothPosition2 = dir2;
+		M2Position = M2Position + Matrix4x4::translate(dir2);
+		m2->setPosition(M2Position); mothPosition2 = Utils::moveLeft(mothPosition2);
+		break;
+
+	case 4:
+		M2Position = m2->getPosition();
+		dir2 = Utils::moveForward(mothPosition2);
+		mothPosition2 = dir2;
+		M2Position = M2Position + Matrix4x4::translate(dir2);
+		m2->setPosition(M2Position);
+		break;
+
+	case 5:
+		M2Position = m2->getPosition();
+		dir2 = Utils::moveBackwards(mothPosition2);
+		mothPosition2 = dir2;
+		M2Position = M2Position + Matrix4x4::translate(dir2);
+		m2->setPosition(M2Position);
 		break;
 
 	}
@@ -313,27 +390,27 @@ void renderFrame(std::vector<Moth*> &mothList) {
 
 
 	//First Lamp Logic
-	if ((lampPosition1.x < (-1)) && lampDirection1)
+	if ((lampPosition1.x < (-1.7)) && lampDirection1)
 		lampDirection1 = false;
-	else if (lampPosition1.x > 1 && !lampDirection1)
+	else if (lampPosition1.x > 1.7 && !lampDirection1)
 		lampDirection1 = true;
 
 	if(lampDirection1)
-		lampPosition1 = Utils::moveLeft(lampPosition1);
+		lampPosition1 = Utils::moveLeftLight(lampPosition1);
 	else
-		lampPosition1 = Utils::moveRight(lampPosition1);
+		lampPosition1 = Utils::moveRightLight(lampPosition1);
 
-
+	//std::cout << lampPosition2.z << "->  [2 - 5]" << std::endl;
 	//Second Lamp Logic
-	if ((lampPosition2.y < (-1)) && lampDirection2)
+	if (lampPosition2.z > 6  && lampDirection2)
 		lampDirection2 = false;
-	else if (lampPosition2.y > 1 && !lampDirection2)
+	else if (lampPosition2.z < 1 && !lampDirection2)
 		lampDirection2 = true;
 
 	if (lampDirection2)
-		lampPosition2 = Utils::moveForward(lampPosition2);
+		lampPosition2 = Utils::moveForwardLight(lampPosition2);
 	else
-		lampPosition2 = Utils::moveBackwards(lampPosition2);
+		lampPosition2 = Utils::moveBackwardsLight(lampPosition2);
 
 
 
@@ -354,7 +431,7 @@ int main()
 
 	std::cout << "****************** Frame Rendering Started******************" << std::endl;
 
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 240; i++)
 	{
 		renderFrame(mothList);
 	}

@@ -42,6 +42,13 @@ public:
 	static Vector3D moveForward(Vector3D pos);
 	static Vector3D moveBackwards(Vector3D pos);
 
+	static Vector3D moveUpLight(Vector3D pos);
+	static Vector3D moveDownLight(Vector3D pos);
+	static Vector3D moveLeftLight(Vector3D pos);
+	static Vector3D moveRightLight(Vector3D pos);
+	static Vector3D moveForwardLight(Vector3D pos);
+	static Vector3D moveBackwardsLight(Vector3D pos);
+
 };
 
 #endif // UTILS_H
