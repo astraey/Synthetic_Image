@@ -140,8 +140,8 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 
 	lightSourceList->push_back(l1);
 	lightSourceList->push_back(l2);
-	//lightSourceList->push_back(l3);
-	//lightSourceList->push_back(l4);
+	lightSourceList->push_back(l3);
+	lightSourceList->push_back(l4);
 
 	objectsList->push_back(sL1);
 	//objectsList->push_back(sL2);

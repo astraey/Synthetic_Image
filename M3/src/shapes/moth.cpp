@@ -187,6 +187,7 @@ int Moth::mothDirection(const std::vector<Vector3D> &pointList, const std::vecto
 	std::cout << "**" << pointList[5] << std::endl;
 	*/
 
+	std::vector<Vector3D> returnData = { 0, 0, 0, 0, 0, 0};
 
 	int nL = lsList.size();
 
@@ -242,9 +243,11 @@ int Moth::mothDirection(const std::vector<Vector3D> &pointList, const std::vecto
 					//Vector3D R = this->getMaterial().getReflectance(this->getNormalWorld(P), wo, wi);
 
 
-					//Illumination[np] = Utils::multiplyPerCanal(I, R);
+					//Illumination[np] += I;
+					returnData[np] += I;
 					//Illumination.push_back(Utils::multiplyPerCanal(I, R));
-					Illumination.push_back(I);
+
+					//Illumination.push_back(I);
 
 
 				
@@ -252,7 +255,13 @@ int Moth::mothDirection(const std::vector<Vector3D> &pointList, const std::vecto
 		}
 	}
 
-	/*
+	for (int k = 0; k < returnData.size(); k++)
+
+	{
+		Illumination.push_back(returnData[k]);
+	}
+
+	
 	std::cout << "Ilumination SIZE**** :" << Illumination.size() << std::endl;
 	std::cout << "**" << Illumination[0] << std::endl;
 	std::cout << "**" << Illumination[1] << std::endl;
@@ -260,13 +269,13 @@ int Moth::mothDirection(const std::vector<Vector3D> &pointList, const std::vecto
 	std::cout << "**" << Illumination[3] << std::endl;
 	std::cout << "**" << Illumination[4] << std::endl;
 	std::cout << "**" << Illumination[5] << std::endl;
-	*/
+	
 
 
 	double max = Illumination[0].x + Illumination[0].y + Illumination[0].z;
 
 
-	int maxpos = 0;
+	int maxpos = 99;
 
 
 	for (int j = 0; j < Illumination.size(); j++)
@@ -280,9 +289,12 @@ int Moth::mothDirection(const std::vector<Vector3D> &pointList, const std::vecto
 
 			if (max <= compare)
 			{
-				//std::cout << "ENTERED HERE in iteration " << j << " MAX: " << max << "Compare: " << compare << std::endl;
+				std::cout << "ENTERED HERE in iteration " << j << " MAX: " << max << " Compare: " << compare << std::endl;
+
 				max = compare;
 				maxpos = j;
+				std::cout << "ENTERED HERE in iteration " << j << " MAX: " << max << " Compare: " << compare << std::endl;
+
 
 			}
 	}
