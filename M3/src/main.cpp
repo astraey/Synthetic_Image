@@ -88,8 +88,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	// Define and place a MOTH
 	Matrix4x4 sphereTransform4;
 	sphereTransform4 = sphereTransform4.translate(mothPosition);
-	
-	 Moth *moth = new Moth(0.25, sphereTransform4, moth_50);
+	Moth *moth = new Moth(0.25, sphereTransform4, moth_50);
 	
 	
 
@@ -142,7 +141,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	lightSourceList->push_back(l1);
 	//lightSourceList->push_back(l2);
 	//lightSourceList->push_back(l3);
-	lightSourceList->push_back(l4);
+	//lightSourceList->push_back(l4);
 
 	objectsList->push_back(sL1);
 	//objectsList->push_back(sL2);
@@ -209,13 +208,14 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 
 	int directionPoint = m->mothDirection(pointList, *objectsList, *lightSourceList);
 
-	//std::cout << directionPoint << std::endl;
+	std::cout << directionPoint << std::endl;
 
 	switch (directionPoint)
 	{
 	case 0:
 		MPosition = m->getPosition();
 		dir = Utils::moveUp(mothPosition);
+		mothPosition = dir;
 		MPosition = MPosition + Matrix4x4::translate(dir);
 		m->setPosition(MPosition);
 		break;
@@ -223,6 +223,7 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 	case 1:
 		MPosition = m->getPosition();
 		dir = Utils::moveDown(mothPosition);
+		mothPosition = dir;
 		MPosition = MPosition + Matrix4x4::translate(dir);
 		m->setPosition(MPosition);
 		break;
@@ -230,6 +231,7 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 	case 2:
 		MPosition = m->getPosition();
 		dir = Utils::moveRight(mothPosition);
+		mothPosition = dir;
 		MPosition = MPosition + Matrix4x4::translate(dir);
 		m->setPosition(MPosition);
 		break;
@@ -237,6 +239,7 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 	case 3:
 		MPosition = m->getPosition();
 		dir = Utils::moveLeft(mothPosition);
+		mothPosition = dir;
 		MPosition = MPosition + Matrix4x4::translate(dir);
 		m->setPosition(MPosition); mothPosition = Utils::moveLeft(mothPosition);
 		break;
@@ -244,6 +247,7 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 	case 4:
 		MPosition = m->getPosition();
 		dir = Utils::moveForward(mothPosition);
+		mothPosition = dir;
 		MPosition = MPosition + Matrix4x4::translate(dir);
 		m->setPosition(MPosition);
 		break;
@@ -251,6 +255,7 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 	case 5:
 		MPosition = m->getPosition();
 		dir = Utils::moveBackwards(mothPosition);
+		mothPosition = dir;
 		MPosition = MPosition + Matrix4x4::translate(dir);
 		m->setPosition(MPosition);
 		break;
