@@ -88,7 +88,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	// Define and place a MOTH
 	Matrix4x4 sphereTransform4;
 	sphereTransform4 = sphereTransform4.translate(mothPosition);
-	Moth *moth = new Moth(0.25, sphereTransform4, moth_50);
+	Moth *moth = new Moth(0.15, sphereTransform4, moth_50);
 	
 	
 
@@ -140,12 +140,12 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 
 	lightSourceList->push_back(l1);
 	lightSourceList->push_back(l2);
-	lightSourceList->push_back(l3);
-	lightSourceList->push_back(l4);
+	//lightSourceList->push_back(l3);
+	//lightSourceList->push_back(l4);
 
 	objectsList->push_back(sL1);
-	//objectsList->push_back(sL2);
-	//objectsList->push_back(sL3);
+	objectsList->push_back(sL2);
+	objectsList->push_back(sL3);
 	objectsList->push_back(sL4);
 
 
@@ -199,16 +199,16 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 
 	std::vector<Vector3D> pointList;
 
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y + r, mothPosition.z));
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y -r, mothPosition.z));
-	pointList.push_back(Vector3D(r + mothPosition.x, mothPosition.y, mothPosition.z));
-	pointList.push_back(Vector3D(mothPosition.x  -r, mothPosition.y, mothPosition.z));
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z + r));
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z -r));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y + r + 0.1, mothPosition.z));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y -r - 0.1, mothPosition.z));
+	pointList.push_back(Vector3D(r + 0.1+ mothPosition.x, mothPosition.y, mothPosition.z));
+	pointList.push_back(Vector3D(mothPosition.x  -r - 0.1, mothPosition.y, mothPosition.z));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z + r + 0.1));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z -r - 0.1));
 
 	int directionPoint = m->mothDirection(pointList, *objectsList, *lightSourceList);
 
-	std::cout << directionPoint << std::endl;
+	//std::cout << directionPoint << std::endl;
 
 	switch (directionPoint)
 	{
@@ -317,7 +317,7 @@ int main()
 
 	std::cout << "****************** Frame Rendering Started******************" << std::endl;
 
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		renderFrame(mothList);
 	}

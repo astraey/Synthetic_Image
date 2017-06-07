@@ -1,6 +1,6 @@
 #include "utils.h"
 
-double step = 0.2;
+double step = 0.03;
 
 Utils::Utils()
 { }
