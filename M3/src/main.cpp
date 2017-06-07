@@ -30,6 +30,9 @@ int frameCounter = 0;
 
 Vector3D mothPosition = Vector3D(-0.75, -0.75, 4.5);
 
+Vector3D lampPosition = Vector3D(0.3, 1, 3.5);
+bool lampDirection = true;
+
 //std::vector<Moth*>* mothsList = new std::vector<Moth*>;
 
 void buildSceneSphere(Camera* &cam, Film* &film,
@@ -57,7 +60,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	Material *blue_50 = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0.2, 0.2, 0.6), 80);
 	Material *white_50 = new Phong(Vector3D(0.9, 0.9, 0.9), Vector3D(0.8, 0.8, 0.8), 80);
 
-	Material *moth_50 = new Phong(Vector3D(0.9, 0.9, 0), Vector3D(0.8, 0.8, 0), 80);
+	Material *moth_50 = new Phong(Vector3D(0.2, 0.2, 0.2), Vector3D(0.2, 0.2, 0.2), 80);
 
 	Material *lamp = new Lamp(1.1, Vector3D(1));
 
@@ -88,7 +91,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	// Define and place a MOTH
 	Matrix4x4 sphereTransform4;
 	sphereTransform4 = sphereTransform4.translate(mothPosition);
-	Moth *moth = new Moth(0.15, sphereTransform4, moth_50);
+	Moth *moth = new Moth(0.1, sphereTransform4, moth_50);
 	
 	
 
@@ -118,9 +121,10 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	//PointLightSource l2 = PointLightSource(Vector3D(-2, 0, 0), Vector3D(1, 1, 1));
 	//PointLightSource l3 = PointLightSource(Vector3D(-2, 0, 0), Vector3D(1, 1, 1));
 
-	PointLightSource l1 = PointLightSource(Vector3D(0.3, 1, 3.5), Vector3D(15, 15, 15));
+	PointLightSource l1 = PointLightSource(lampPosition, Vector3D(15, 15, 15));
 	Matrix4x4 sphereTransformL1;
-	sphereTransformL1 = sphereTransform1.translate(Vector3D(0.3, 1, 3.5));
+
+	sphereTransformL1 = sphereTransform1.translate(lampPosition);
 	Shape *sL1 = new Sphere(0.1, sphereTransformL1, lamp);
 
 	PointLightSource l2 = PointLightSource(Vector3D(3, 4, -1), Vector3D(15, 15, 15));
@@ -140,12 +144,12 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 
 	lightSourceList->push_back(l1);
 	lightSourceList->push_back(l2);
-	//lightSourceList->push_back(l3);
-	//lightSourceList->push_back(l4);
+	lightSourceList->push_back(l3);
+	lightSourceList->push_back(l4);
 
 	objectsList->push_back(sL1);
-	objectsList->push_back(sL2);
-	objectsList->push_back(sL3);
+	//objectsList->push_back(sL2);
+	//objectsList->push_back(sL3);
 	objectsList->push_back(sL4);
 
 
@@ -199,16 +203,16 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 
 	std::vector<Vector3D> pointList;
 
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y + r + 0.1, mothPosition.z));
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y -r - 0.1, mothPosition.z));
-	pointList.push_back(Vector3D(r + 0.1+ mothPosition.x, mothPosition.y, mothPosition.z));
-	pointList.push_back(Vector3D(mothPosition.x  -r - 0.1, mothPosition.y, mothPosition.z));
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z + r + 0.1));
-	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z -r - 0.1));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y + r, mothPosition.z));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y -r, mothPosition.z));
+	pointList.push_back(Vector3D(r + mothPosition.x, mothPosition.y, mothPosition.z));
+	pointList.push_back(Vector3D(mothPosition.x  -r, mothPosition.y, mothPosition.z));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z + r));
+	pointList.push_back(Vector3D(mothPosition.x, mothPosition.y, mothPosition.z -r));
 
 	int directionPoint = m->mothDirection(pointList, *objectsList, *lightSourceList);
 
-	//std::cout << directionPoint << std::endl;
+	std::cout << directionPoint << std::endl;
 
 	switch (directionPoint)
 	{
@@ -300,6 +304,16 @@ void renderFrame(std::vector<Moth*> &mothList) {
 
 	mothLogic(cam, shader, film, objectsList, lightSourceList, mothList);
 
+	if ((lampPosition.x < (-1)) && lampDirection)
+		lampDirection = false;
+	else if (lampPosition.x > 1 && !lampDirection)
+		lampDirection = true;
+
+	if(lampDirection)
+		lampPosition = Utils::moveLeft(lampPosition);
+	else
+		lampPosition = Utils::moveRight(lampPosition);
+
 	// Save the final result to file
 	//std::cout << "\n\nSaving the result to file output.bmp\n" << std::endl;
 	film->saveFrame();
@@ -317,7 +331,7 @@ int main()
 
 	std::cout << "****************** Frame Rendering Started******************" << std::endl;
 
-	for (int i = 0; i < 200; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		renderFrame(mothList);
 	}

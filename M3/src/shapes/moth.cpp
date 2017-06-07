@@ -261,15 +261,15 @@ int Moth::mothDirection(const std::vector<Vector3D> &pointList, const std::vecto
 		Illumination.push_back(returnData[k]);
 	}
 
-	/*
-	std::cout << "Ilumination SIZE**** :" << Illumination.size() << std::endl;
+	
+	/*std::cout << "Ilumination SIZE**** :" << Illumination.size() << std::endl;
 	std::cout << "**" << Illumination[0] << std::endl;
 	std::cout << "**" << Illumination[1] << std::endl;
 	std::cout << "**" << Illumination[2] << std::endl;
 	std::cout << "**" << Illumination[3] << std::endl;
 	std::cout << "**" << Illumination[4] << std::endl;
-	std::cout << "**" << Illumination[5] << std::endl;
-	*/
+	std::cout << "**" << Illumination[5] << std::endl;*/
+	
 
 
 	double max = Illumination[0].x + Illumination[0].y + Illumination[0].z;
