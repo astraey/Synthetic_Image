@@ -191,6 +191,7 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
 void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList, std::vector<Moth*> &mothList)
 {
+	
 
 	Moth* m = mothList[0];
 	int r = m->getRadius();
@@ -208,7 +209,7 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 
 	int directionPoint = m->mothDirection(pointList, *objectsList, *lightSourceList);
 
-	std::cout << directionPoint << std::endl;
+	//std::cout << directionPoint << std::endl;
 
 	switch (directionPoint)
 	{
@@ -255,6 +256,8 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 		break;
 
 	}
+
+	
 
 }
 

@@ -126,6 +126,9 @@
     <ClCompile Include="..\..\src\alDir\hemisphericalsampler.cpp">
       <Filter>src\alDir</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\shapes\moth.cpp">
+      <Filter>src\shapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cameras\camera.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\alDir\hemisphericalsampler.h">
       <Filter>src\alDir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\shapes\moth.h">
+      <Filter>src\shapes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
