@@ -30,8 +30,11 @@ int frameCounter = 0;
 
 Vector3D mothPosition = Vector3D(-0.75, -0.75, 4.5);
 
-Vector3D lampPosition = Vector3D(0.3, 1, 3.5);
-bool lampDirection = true;
+Vector3D lampPosition1 = Vector3D(0.3, 1.5, 3.5);
+bool lampDirection1 = true;
+
+Vector3D lampPosition2 = Vector3D(0.3, -0.7, 3.5);
+bool lampDirection2 = true;
 
 //std::vector<Moth*>* mothsList = new std::vector<Moth*>;
 
@@ -57,10 +60,10 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	/* ************************** */
 	Material *green_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 80);
 	Material *red_50 = new Phong(Vector3D(0.7, 0.2, 0.2), Vector3D(0.6, 0.2, 0.2), 80);
-	Material *blue_50 = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0.2, 0.2, 0.6), 80);
+	Material *blue_50 = new Phong(Vector3D(0.2, 0.2, 0.5), Vector3D(0.2, 0.2, 0.4), 80);
 	Material *white_50 = new Phong(Vector3D(0.9, 0.9, 0.9), Vector3D(0.8, 0.8, 0.8), 80);
 
-	Material *moth_50 = new Phong(Vector3D(0.2, 0.2, 0.2), Vector3D(0.2, 0.2, 0.2), 80);
+	Material *moth_50 = new Phong(Vector3D(0.1, 0.1, 0.1), Vector3D(0.1, 0.1, 0.1), 10);
 
 	Material *lamp = new Lamp(1.1, Vector3D(1));
 
@@ -72,6 +75,8 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	// Create a heterogeneous list of objects of type shape
 	// (some might be triangles, other spheres, plans, etc)
 	objectsList = new std::vector<Shape*>;
+
+
 
 	// Define and place a sphere
 	Matrix4x4 sphereTransform1;
@@ -96,7 +101,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	
 
 	Shape *ip = new InfinitePlane(Vector3D(0, -1.5, 0), Vector3D(0, 1, 0), white_50);
-	Shape *backPlane = new InfinitePlane(Vector3D(0, 0, 20), Vector3D(0, 0, -1), blue_50);
+	Shape *backPlane = new InfinitePlane(Vector3D(0, 0, 7), Vector3D(0, 0, -1), blue_50);
 
 	// Store the objects in the object list
 	//objectsList->push_back(s1);
@@ -117,19 +122,21 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 
 	lightSourceList = new std::vector<PointLightSource>;
 
-	//PointLightSource l1 = PointLightSource(Vector3D(-1, -1, -1), Vector3D(1, 1, 1));
-	//PointLightSource l2 = PointLightSource(Vector3D(-2, 0, 0), Vector3D(1, 1, 1));
-	//PointLightSource l3 = PointLightSource(Vector3D(-2, 0, 0), Vector3D(1, 1, 1));
 
-	PointLightSource l1 = PointLightSource(lampPosition, Vector3D(15, 15, 15));
+	//Light Point Declaration
+	PointLightSource l1 = PointLightSource(lampPosition1, Vector3D(5, 5, 5));
 	Matrix4x4 sphereTransformL1;
 
-	sphereTransformL1 = sphereTransform1.translate(lampPosition);
+	//Lamp Shape Declaration
+	sphereTransformL1 = sphereTransform1.translate(lampPosition1);
 	Shape *sL1 = new Sphere(0.1, sphereTransformL1, lamp);
 
-	PointLightSource l2 = PointLightSource(Vector3D(3, 4, -1), Vector3D(15, 15, 15));
+	//Light Point Declaration
+	PointLightSource l2 = PointLightSource(lampPosition2, Vector3D(5, 5, 5));
 	Matrix4x4 sphereTransformL2;
-	sphereTransformL2 = sphereTransform1.translate(Vector3D(3, 4, -1));
+
+	//Lamp Shape Declaration
+	sphereTransformL2 = sphereTransform1.translate(lampPosition2);
 	Shape *sL2 = new Sphere(0.1, sphereTransformL2, lamp);
 
 	PointLightSource l3 = PointLightSource(Vector3D(3, 3, 3), Vector3D(15, 15, 15));
@@ -144,13 +151,13 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 
 	lightSourceList->push_back(l1);
 	lightSourceList->push_back(l2);
-	lightSourceList->push_back(l3);
-	lightSourceList->push_back(l4);
+	//lightSourceList->push_back(l3);
+	//lightSourceList->push_back(l4);
 
 	objectsList->push_back(sL1);
-	//objectsList->push_back(sL2);
+	objectsList->push_back(sL2);
 	//objectsList->push_back(sL3);
-	objectsList->push_back(sL4);
+	//objectsList->push_back(sL4);
 
 
 }
@@ -212,7 +219,7 @@ void mothLogic(Camera* &cam, Shader* &shader, Film* &film,
 
 	int directionPoint = m->mothDirection(pointList, *objectsList, *lightSourceList);
 
-	std::cout << directionPoint << std::endl;
+	//std::cout << directionPoint << std::endl;
 
 	switch (directionPoint)
 	{
@@ -304,21 +311,37 @@ void renderFrame(std::vector<Moth*> &mothList) {
 
 	mothLogic(cam, shader, film, objectsList, lightSourceList, mothList);
 
-	if ((lampPosition.x < (-1)) && lampDirection)
-		lampDirection = false;
-	else if (lampPosition.x > 1 && !lampDirection)
-		lampDirection = true;
 
-	if(lampDirection)
-		lampPosition = Utils::moveLeft(lampPosition);
+	//First Lamp Logic
+	if ((lampPosition1.x < (-1)) && lampDirection1)
+		lampDirection1 = false;
+	else if (lampPosition1.x > 1 && !lampDirection1)
+		lampDirection1 = true;
+
+	if(lampDirection1)
+		lampPosition1 = Utils::moveLeft(lampPosition1);
 	else
-		lampPosition = Utils::moveRight(lampPosition);
+		lampPosition1 = Utils::moveRight(lampPosition1);
+
+
+	//Second Lamp Logic
+	if ((lampPosition2.y < (-1)) && lampDirection2)
+		lampDirection2 = false;
+	else if (lampPosition2.y > 1 && !lampDirection2)
+		lampDirection2 = true;
+
+	if (lampDirection2)
+		lampPosition2 = Utils::moveForward(lampPosition2);
+	else
+		lampPosition2 = Utils::moveBackwards(lampPosition2);
+
+
+
 
 	// Save the final result to file
-	//std::cout << "\n\nSaving the result to file output.bmp\n" << std::endl;
 	film->saveFrame();
 
-	//std::cout << "\n\n" << std::endl;
+
 
 }
 
